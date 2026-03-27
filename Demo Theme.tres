@@ -1,0 +1,39 @@
+[gd_resource type="Theme" format=3 uid="uid://dxsr23suevg7q"]
+
+[ext_resource type="StyleBox" uid="uid://bkik5x7ncrw7x" path="res://Demo Theme/DropDown/disabled.tres" id="1_fq4h3"]
+[ext_resource type="StyleBox" uid="uid://c3hd1br305303" path="res://style_box_empty.tres" id="2_jhq1v"]
+[ext_resource type="StyleBox" uid="uid://bsi3lxir43yvq" path="res://Demo Theme/DropDown/hover.tres" id="3_5o2i5"]
+[ext_resource type="StyleBox" uid="uid://u5dxpy7ppvcg" path="res://Demo Theme/DropDown/normal.tres" id="4_nco80"]
+[ext_resource type="StyleBox" uid="uid://b2thqffpc6bna" path="res://Demo Theme/DropDown/pressed.tres" id="5_htu4b"]
+[ext_resource type="StyleBox" uid="uid://c34ue4evdsgeb" path="res://Demo Theme/DropDown/DropDownButton/disabled.tres" id="6_l6efw"]
+[ext_resource type="StyleBox" uid="uid://b0as5gybmh33" path="res://Demo Theme/DropDown/DropDownButton/hover.tres" id="7_xw8qd"]
+[ext_resource type="StyleBox" uid="uid://q3o7023dfu22" path="res://Demo Theme/DropDown/DropDownButton/normal.tres" id="8_fncgs"]
+[ext_resource type="StyleBox" uid="uid://dnlpq556um85g" path="res://Demo Theme/DropDown/DropDownButton/pressed.tres" id="9_ivj3l"]
+
+[sub_resource type="DPITexture" id="DPITexture_qtetv"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"8\"><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" d=\"m12 2-4 3.5L4 2\"/></svg>
+"
+
+[sub_resource type="DPITexture" id="DPITexture_6l7ak"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"8\"><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" d=\"m4 6 4-3.5L12 6\"/></svg>
+"
+
+[resource]
+DropDown/styles/disabled = ExtResource("1_fq4h3")
+DropDown/styles/focus = ExtResource("2_jhq1v")
+DropDown/styles/hover = ExtResource("3_5o2i5")
+DropDown/styles/normal = ExtResource("4_nco80")
+DropDown/styles/pressed = ExtResource("5_htu4b")
+DropDownBtn/icons/down = SubResource("DPITexture_qtetv")
+DropDownBtn/icons/down_disabled = SubResource("DPITexture_qtetv")
+DropDownBtn/icons/down_hover = SubResource("DPITexture_qtetv")
+DropDownBtn/icons/down_pressed = SubResource("DPITexture_qtetv")
+DropDownBtn/icons/up = SubResource("DPITexture_6l7ak")
+DropDownBtn/icons/up_disabled = SubResource("DPITexture_6l7ak")
+DropDownBtn/icons/up_hover = SubResource("DPITexture_6l7ak")
+DropDownBtn/icons/up_pressed = SubResource("DPITexture_6l7ak")
+DropDownBtn/styles/disabled = ExtResource("6_l6efw")
+DropDownBtn/styles/focus = ExtResource("2_jhq1v")
+DropDownBtn/styles/hover = ExtResource("7_xw8qd")
+DropDownBtn/styles/normal = ExtResource("8_fncgs")
+DropDownBtn/styles/pressed = ExtResource("9_ivj3l")

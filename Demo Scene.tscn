@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://dvjunaikmua66"]
+
+[ext_resource type="Script" uid="uid://biuyl3np3cco3" path="res://Controls/DropDown/DropDown.gd" id="1_nuqbx"]
+[ext_resource type="Theme" uid="uid://dxsr23suevg7q" path="res://Demo Theme.tres" id="1_s4lb6"]
+[ext_resource type="StyleBox" uid="uid://u5dxpy7ppvcg" path="res://Demo Theme/DropDown/normal.tres" id="2_3kh3t"]
+[ext_resource type="StyleBox" uid="uid://b2thqffpc6bna" path="res://Demo Theme/DropDown/pressed.tres" id="3_cpn48"]
+[ext_resource type="StyleBox" uid="uid://bkik5x7ncrw7x" path="res://Demo Theme/DropDown/disabled.tres" id="3_k60n3"]
+[ext_resource type="StyleBox" uid="uid://bsi3lxir43yvq" path="res://Demo Theme/DropDown/hover.tres" id="4_tvxeg"]
+[ext_resource type="StyleBox" uid="uid://c3hd1br305303" path="res://style_box_empty.tres" id="6_tvxeg"]
+[ext_resource type="Script" uid="uid://cxylwneos738y" path="res://Controls/DropDown/OptionItem.gd" id="8_ipwy3"]
+
+[sub_resource type="Resource" id="Resource_ipwy3"]
+script = ExtResource("8_ipwy3")
+Text = "1"
+
+[sub_resource type="Resource" id="Resource_do1v3"]
+script = ExtResource("8_ipwy3")
+Text = "2"
+
+[sub_resource type="Resource" id="Resource_y2twt"]
+script = ExtResource("8_ipwy3")
+Text = "3"
+
+[node name="Control" type="Control" unique_id=662438839]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DropDown" type="Button" parent="." unique_id=936140169]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 32.0
+theme = ExtResource("1_s4lb6")
+theme_override_styles/normal = ExtResource("2_3kh3t")
+theme_override_styles/pressed = ExtResource("3_cpn48")
+theme_override_styles/hover = ExtResource("4_tvxeg")
+theme_override_styles/disabled = ExtResource("3_k60n3")
+theme_override_styles/focus = ExtResource("6_tvxeg")
+script = ExtResource("1_nuqbx")
+DropDownItem_Position = Vector2(0, 32)
+DropDownItem_Items = Array[ExtResource("8_ipwy3")]([SubResource("Resource_ipwy3"), SubResource("Resource_do1v3"), SubResource("Resource_y2twt")])
+metadata/_custom_type_script = "uid://biuyl3np3cco3"

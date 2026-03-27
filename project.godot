@@ -1,0 +1,51 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="SilverFox--godot-custom-controls"
+run/main_scene="uid://dvjunaikmua66"
+config/use_custom_user_dir=true
+config/custom_user_dir_name="SilverFox--godot-custom-controls"
+config/features=PackedStringArray("4.6", "GL Compatibility")
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/sharp_corners=true
+
+[gui]
+
+theme/custom="uid://dxsr23suevg7q"
+
+[importer_defaults]
+
+texture={
+&"process/premult_alpha": true
+}
+
+[internationalization]
+
+locale/fallback="zh"
+locale/country_filter=[]
+locale/locale_filter_mode=1
+locale/language_filter=[]
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+textures/canvas_textures/default_texture_filter=0
+rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

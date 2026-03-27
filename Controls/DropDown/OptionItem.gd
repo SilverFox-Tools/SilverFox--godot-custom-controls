@@ -3,12 +3,32 @@
 # 作者: 东方银狐
 # GitHub: https://github.com/bilibiliDFYH
 # 许可证: MIT
-# V0.1
+# V0.2
 # ============================================
 
 class_name OptionItem
 extends Resource
 
-@export var Text : String = ""
-@export var Icon : Texture
-@export var Disabled : bool = false
+var _parent : DropDown = null
+
+@export var Text : String = "" :
+	set (value) :
+		Text = value
+		_notify_parent ()
+
+@export var Icon : Texture :
+	set (value) :
+		Icon = value
+		_notify_parent ()
+
+@export var Disabled : bool = false :
+	set (value) :
+		Disabled = value
+		_notify_parent ()
+
+func _notify_parent () :
+	if _parent :
+		_parent.Update_Items ()
+
+func set_parent (parent: DropDown) :
+	_parent = parent
