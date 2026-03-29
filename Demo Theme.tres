@@ -9,6 +9,12 @@
 [ext_resource type="StyleBox" uid="uid://b0as5gybmh33" path="res://Demo Theme/DropDown/DropDownButton/hover.tres" id="7_xw8qd"]
 [ext_resource type="StyleBox" uid="uid://q3o7023dfu22" path="res://Demo Theme/DropDown/DropDownButton/normal.tres" id="8_fncgs"]
 [ext_resource type="StyleBox" uid="uid://dnlpq556um85g" path="res://Demo Theme/DropDown/DropDownButton/pressed.tres" id="9_ivj3l"]
+[ext_resource type="StyleBox" uid="uid://mkydnw0e1lk" path="res://Demo Theme/DropDown/DropDownItem/background.tres" id="10_jhq1v"]
+[ext_resource type="StyleBox" uid="uid://5fylechum0ti" path="res://Demo Theme/DropDown/DropDownItem/disabled.tres" id="11_l6efw"]
+[ext_resource type="StyleBox" uid="uid://cv3fbae1ohub" path="res://Demo Theme/DropDown/DropDownItem/focus.tres" id="12_fncgs"]
+[ext_resource type="StyleBox" uid="uid://beugahpxnsp8y" path="res://Demo Theme/DropDown/DropDownItem/hover.tres" id="12_xw8qd"]
+[ext_resource type="StyleBox" uid="uid://dg686s56ymc2y" path="res://Demo Theme/DropDown/DropDownItem/normal.tres" id="13_fncgs"]
+[ext_resource type="StyleBox" uid="uid://erxm6aejkxtp" path="res://Demo Theme/DropDown/DropDownItem/pressed.tres" id="14_ivj3l"]
 
 [sub_resource type="DPITexture" id="DPITexture_qtetv"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"8\"><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" d=\"m12 2-4 3.5L4 2\"/></svg>
@@ -37,3 +43,9 @@ DropDownBtn/styles/focus = ExtResource("2_jhq1v")
 DropDownBtn/styles/hover = ExtResource("7_xw8qd")
 DropDownBtn/styles/normal = ExtResource("8_fncgs")
 DropDownBtn/styles/pressed = ExtResource("9_ivj3l")
+DropDownItem/styles/background = ExtResource("10_jhq1v")
+DropDownItem/styles/disabled = ExtResource("11_l6efw")
+DropDownItem/styles/focus = ExtResource("12_fncgs")
+DropDownItem/styles/hover = ExtResource("12_xw8qd")
+DropDownItem/styles/normal = ExtResource("13_fncgs")
+DropDownItem/styles/pressed = ExtResource("14_ivj3l")

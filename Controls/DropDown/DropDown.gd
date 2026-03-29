@@ -3,17 +3,20 @@
 # 作者: 东方银狐
 # GitHub: https://github.com/bilibiliDFYH
 # 许可证: MIT
-# V0.2
+# V0.3
 # ============================================
 
 @tool
 extends Button
 class_name DropDown
 
-var DropDownButton_Is_Touch = false :
+var DropDownBtn_Is_Touch = false :
 	set (value) :
-		DropDownButton_Is_Touch = value
-		Update_DropDownButton_Icon ()
+		DropDownBtn_Is_Touch = value
+		Update_DropDownBtn_Icon ()
+
+var DropDown_Is_Touch = false
+var Scroll_direction = 1
 
 var Node_Button : Button = Button.new ()
 var Node_Background : Panel = Panel.new ()
@@ -31,20 +34,41 @@ var NodeList_Items : Array[Button] = []
 @export var DropDown_Is_DropDown : bool = false :
 	set (value) :
 		DropDown_Is_DropDown = value
-		Update_DropDownButton_Icon ()
+		Update_DropDownBtn_Icon ()
 		Node_Background.visible = DropDown_Is_DropDown
+
+@export var DropDown_AllowNotToSelect : bool = true :
+	set (value) :
+		DropDown_AllowNotToSelect = value
+		DropDown_Index = DropDown_Index
 
 @export var DropDown_Index : int = -1 :
 	set (value) :
-		value = max (value , -1)
-		value = min (value , DropDownItem_Items.size () - 1)
-		DropDown_Index = value
-		if DropDown_Index == -1 :
-			self.text = ""
-			self.icon = null
+		if DropDown_AllowNotToSelect :
+			value = max (value , -1)
 		else :
-			self.text = DropDownItem_Items[DropDown_Index].Text
-			self.icon = DropDownItem_Items[DropDown_Index].Icon
+			value = max (value , 0)
+		value = min (value , DropDownItem_Items.size () - 1)
+
+		value = Select_NonDisabled (value)
+
+		DropDown_Index = value
+		Update_SelfDisplay ()
+
+@export var DropDown_Alignment : HorizontalAlignment = 0 as HorizontalAlignment :
+	set (value) :
+		DropDown_Alignment = value
+		Update_Alignment ()
+
+@export var DropDown_IconAlignment : HorizontalAlignment = 0 as HorizontalAlignment :
+	set (value) :
+		DropDown_IconAlignment = value
+		Update_Alignment ()
+
+@export var DropDown_IconAlignment_Vertical : VerticalAlignment = 1 as VerticalAlignment :
+	set (value) :
+		DropDown_IconAlignment_Vertical = value
+		Update_Alignment ()
 #endregion
 
 
@@ -74,10 +98,10 @@ var NodeList_Items : Array[Button] = []
 #region 选项 DropDownItem_
 @export_group ("选项", "DropDownItem_")
 ## 选项大小
-@export var DropDownItem_Width : float = 124 :
+@export var DropDownItem_Width : float = 128 - 8 :
 	set (value) :
 		DropDownItem_Width = max (value , 0)
-		Update_Items ()
+		Update_Items ("ItemDisplay")
 
 @export_tool_button ("重置Item宽度") var DropDownItem_reset_Width = DropDownItem_resetWidth
 
@@ -87,7 +111,7 @@ func DropDownItem_resetWidth () :
 @export var DropDownItem_Height : float = 32 :
 	set (value) :
 		DropDownItem_Height = max (value , 0)
-		Update_Items ()
+		Update_Items ("ItemDisplay")
 
 @export var DropDownItem_Position : Vector2 = Vector2 (0 , DropDown_Size.y) :
 	set (value) :
@@ -107,11 +131,26 @@ func DropDownItem_resetPosition () :
 
 @export var DropDownItem_NeedBackground : bool = true
 
-@export var DropDownItem_Margin : Vector4 = Vector4 (2 , 2 , 2 , 2) :
+@export var DropDownItem_Margin : Vector4 = Vector4 (4 , 4 , 4 , 4) :
 	set (value) :
 		DropDownItem_Margin = Vector4 (max (value.x , 0) , max (value.y , 0) , max (value.z , 0) , max (value.w , 0))
 		Node_Item.position = Vector2 (DropDownItem_Margin.x , DropDownItem_Margin.y)
 		Node_Background.size = Node_Item.size + Vector2 (DropDownItem_Margin.x , DropDownItem_Margin.y) + Vector2 (DropDownItem_Margin.z , DropDownItem_Margin.w)
+
+@export var DropDownItem_Alignment : HorizontalAlignment = 0 as HorizontalAlignment :
+	set (value) :
+		DropDownItem_Alignment = value
+		Update_Alignment ()
+
+@export var DropDownItem_IconAlignment : HorizontalAlignment = 0 as HorizontalAlignment :
+	set (value) :
+		DropDownItem_IconAlignment = value
+		Update_Alignment ()
+
+@export var DropDownItem_IconAlignment_Vertical : VerticalAlignment = 1 as VerticalAlignment :
+	set (value) :
+		DropDownItem_IconAlignment_Vertical = value
+		Update_Alignment ()
 #endregion
 
 
@@ -163,12 +202,14 @@ func _ready () -> void :
 		Engine_ready = true
 		self.size = DropDown_Size
 
-	self.pressed.connect (DropDownButton_Pressed)
+	self.pressed.connect (DropDownBtn_Pressed)
+	self.mouse_entered.connect (DropDown_entered)
+	self.mouse_exited.connect (DropDown_exited)
 
 	Node_Button.name = "Button"
-	Node_Button.pressed.connect (DropDownButton_Pressed)
-	Node_Button.mouse_entered.connect (DropDownButton_entered)
-	Node_Button.mouse_exited.connect (DropDownButton_exited)
+	Node_Button.pressed.connect (DropDownBtn_Pressed)
+	Node_Button.mouse_entered.connect (DropDownBtn_entered)
+	Node_Button.mouse_exited.connect (DropDownBtn_exited)
 	Node_Button.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
 
 	Node_Background.name = "Background"
@@ -177,158 +218,225 @@ func _ready () -> void :
 	Set_Theme ()
 	Update_Items ()
 
-	if DropDown_Index == -1 :
-		self.text = ""
-		self.icon = null
-	else :
-		self.text = DropDownItem_Items[DropDown_Index].Text
-		self.icon = DropDownItem_Items[DropDown_Index].Icon
+	DropDown_Index = Select_NonDisabled (DropDown_Index)
+	Update_SelfDisplay ()
+
+	Update_Alignment ()
 
 var _last_disabled = self.disabled
 func _process (_delta : float) -> void :
 	if _last_disabled != self.disabled :
-		Update_DropDownButton_Icon ()
+		Update_DropDownBtn_Icon ()
 		Node_Button.disabled = self.disabled
 
 	_last_disabled = self.disabled
 
 
-func DropDownButton_Pressed () :
+#region 输入信号
+func DropDownBtn_Pressed () :
 	DropDown_Is_DropDown = !DropDown_Is_DropDown
 
-func DropDownButton_entered () :
-	DropDownButton_Is_Touch = true
+func DropDown_entered() :
+	DropDown_Is_Touch = true
+	grab_focus ()
 
-func DropDownButton_exited () :
-	DropDownButton_Is_Touch = false
+func DropDown_exited() :
+	DropDown_Is_Touch = false
 
+
+func DropDownBtn_entered () :
+	DropDownBtn_Is_Touch = true
+
+func DropDownBtn_exited () :
+	DropDownBtn_Is_Touch = false
 
 func Item_Pressed (value : int) :
 	DropDown_Index = value
-	DropDownButton_Pressed ()
+	DropDownBtn_Pressed ()
+
+var temp_Rolling_volume = 0.0
+func _gui_input (event : InputEvent) -> void :
+	if event is InputEventMouseButton :
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP :
+			if DropDown_Is_Touch :
+				Scroll_direction = 0
+				temp_Rolling_volume -= 0.5
+
+		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN :
+			if DropDown_Is_Touch :
+				Scroll_direction = 1
+				temp_Rolling_volume += 0.5
+
+	if event is InputEventKey :
+		match event.keycode :
+			KEY_UP :
+				if event.pressed :
+					if DropDown_Is_Touch :
+						Scroll_direction = 0
+						temp_Rolling_volume -= 1
+			KEY_DOWN :
+				if event.pressed :
+					if DropDown_Is_Touch :
+						Scroll_direction = 1
+						temp_Rolling_volume += 1
+			KEY_ESCAPE :
+				if event.pressed and DropDown_Is_DropDown :
+					DropDown_Is_DropDown = false
+
+	var temp_DropDown_Index = DropDown_Index + int (temp_Rolling_volume)
+
+	DropDown_Index = temp_DropDown_Index
+
+	if temp_Rolling_volume >= 1 or temp_Rolling_volume <= -1 :
+		temp_Rolling_volume = 0
+#endregion
 
 
-func Update_Items () :
-	for i in DropDownItem_Items.size () :
-		if DropDownItem_Items[i] is not OptionItem :
-			DropDownItem_Items[i] = OptionItem.new ()
-			DropDownItem_Items[i].set_parent (self)
+func Update_Items (Type : String = "Redraw") :
+	match Type :
+		"Redraw" :
+			for i in DropDownItem_Items.size () :
+				if DropDownItem_Items[i] is not OptionItem :
+					DropDownItem_Items[i] = OptionItem.new ()
+					DropDownItem_Items[i].set_parent (self)
 
-	while NodeList_Items.size () > DropDownItem_Items.size () :
-		var btn = NodeList_Items.pop_back ()
-		if btn and btn.is_inside_tree () :
-			btn.queue_free ()
+			while NodeList_Items.size () > DropDownItem_Items.size () :
+				var btn = NodeList_Items.pop_back ()
+				if btn and btn.is_inside_tree () :
+					btn.queue_free ()
 
-	NodeList_Items.resize (DropDownItem_Items.size () )
+			NodeList_Items.resize (DropDownItem_Items.size () )
 
-	for i in NodeList_Items.size () :
-		var node = NodeList_Items[i]
-		if not node or node is not Button :
-			if node and node.is_inside_tree () :
-				node.queue_free ()
-			NodeList_Items[i] = Button.new ()
-			Node_Item.add_child (NodeList_Items[i])
+			for i in NodeList_Items.size () :
+				var node = NodeList_Items[i]
+				if not node or node is not Button :
+					if node and node.is_inside_tree () :
+						node.queue_free ()
+			
+					NodeList_Items[i] = Button.new ()
+					NodeList_Items[i].pressed.connect (Item_Pressed.bind (i) )
 
-		elif not node.is_inside_tree () :
-			Node_Item.add_child (node)
+					Node_Item.add_child (NodeList_Items[i])
 
-	var Position_NodeItem = 0
-	for i in DropDownItem_Items.size () :
-		var node : Button = NodeList_Items[i]
-		var Item : OptionItem = DropDownItem_Items[i]
-		node.size = Vector2 (DropDownItem_Width , DropDownItem_Height)
-		node.position = Vector2 (0 , Position_NodeItem)
+				elif not node.is_inside_tree () :
+					Node_Item.add_child (node)
 
-		node.text = Item.Text
-		node.icon = Item.Icon
-		node.disabled = Item.Disabled
+			Update_Items ("ItemDisplay")
 
-		node.pressed.connect (Item_Pressed.bind (i) )
+		"ItemDisplay" :
+			var Position_NodeItem = 0
+			for i in DropDownItem_Items.size () :
+				var node : Button = NodeList_Items[i]
+				var Item : OptionItem = DropDownItem_Items[i]
+				node.size = Vector2 (DropDownItem_Width , DropDownItem_Height)
+				node.position = Vector2 (0 , Position_NodeItem)
 
-		Position_NodeItem += node.size.y
-
-	Node_Item.size = Vector2 (DropDownItem_Width , Position_NodeItem)
-
-	DropDownItem_Margin = DropDownItem_Margin
+				node.text = Item.Text
+				node.icon = Item.Icon
+				node.disabled = Item.Disabled
 
 
-func Set_Theme () :
-	var current_theme = ThemeDB.get_default_theme ()
+				Position_NodeItem += node.size.y
 
-	if !theme :
-		theme = ThemeDB.get_project_theme ()
+			Node_Item.size = Vector2 (DropDownItem_Width , Position_NodeItem)
+
+			DropDownItem_Margin = DropDownItem_Margin
+
+			Set_Theme ("DropDownItem")
+			Update_Alignment ()
+
+	DropDown_Index = Select_NonDisabled (DropDown_Index)
+	Update_SelfDisplay ()
+
+
+#region 设置外观
+func Set_Theme (Type : String = "All") :
+	var current_theme
+	var styleboxlist = ["normal" , "hover" , "pressed" , "disabled" , "focus"]
+	var iconlist = ["" , "_hover" , "_pressed" , "_disabled"]
+
+	if Type != "All" :
+		current_theme = ThemeDB.get_default_theme ()
+
+		if !theme :
+			theme = ThemeDB.get_project_theme ()
 
 	if theme :
 		_Modify_theme = true
-		var styleboxlist = ["normal" , "hover" , "pressed" , "disabled" , "focus"]
-		var iconlist = ["" , "_hover" , "_pressed" , "_disabled"]
 
-#DropDown
-		for stylebox_name in styleboxlist :
-			var style = theme.get_stylebox (stylebox_name , "DropDown")
-			if !style :
-				style = theme.get_stylebox ("normal" , "LineEdit")
-			if current_theme and !style :
-				style = current_theme.get_stylebox ("normal" , "LineEdit")
+		match Type :
+			"All" :
+				Set_Theme ("DropDown")
+				Set_Theme ("DropDownBtn")
+				Set_Theme ("DropDownBtn-Icon")
+				Set_Theme ("DropDownItem")
+				Set_Theme ("DropDownItemBackground")
 
-			if style :
-				self.add_theme_stylebox_override (stylebox_name, style)
+			"DropDown" :
+				for stylebox_name in styleboxlist :
+					var style = theme.get_stylebox (stylebox_name , "DropDown")
+					if !style :
+						style = theme.get_stylebox ("normal" , "LineEdit")
+					if current_theme and !style :
+						style = current_theme.get_stylebox ("normal" , "LineEdit")
 
-#DropDownBtn
-		for stylebox_name in styleboxlist :
-			var style = theme.get_stylebox (stylebox_name , "DropDownBtn")
-			if style :
-				Node_Button.add_theme_stylebox_override (stylebox_name, style)
+					if style :
+						self.add_theme_stylebox_override (stylebox_name, style)
 
-#DropDownBtn-Icon
-		for icon_name in iconlist :
-			for temp_str in ["up" , "down"] :
-				var theme_icon = theme.get_icon (temp_str + icon_name , "DropDownBtn")
-				if !theme_icon :
-					theme_icon = theme.get_icon (temp_str + icon_name , "SpinBox")
-				if current_theme and !theme_icon :
-					theme_icon = current_theme.get_icon (temp_str + icon_name , "LineEdit")
+			"DropDownBtn" :
+				for stylebox_name in styleboxlist :
+					var style = theme.get_stylebox (stylebox_name , "DropDownBtn")
+					if style :
+						Node_Button.add_theme_stylebox_override (stylebox_name, style)
 
-				if theme_icon :
-					Node_Button.add_theme_icon_override (temp_str + icon_name, theme_icon)
+			"DropDownBtn-Icon" :
+				for icon_name in iconlist :
+					for temp_str in ["up" , "down"] :
+						var theme_icon = theme.get_icon (temp_str + icon_name , "DropDownBtn")
+						if !theme_icon :
+							theme_icon = theme.get_icon (temp_str + icon_name , "SpinBox")
+						if current_theme and !theme_icon :
+							theme_icon = current_theme.get_icon (temp_str + icon_name , "LineEdit")
 
-#DropDownItem
-		for stylebox_name in styleboxlist :
-			var style
+						if theme_icon :
+							Node_Button.add_theme_icon_override (temp_str + icon_name, theme_icon)
 
-			if theme.has_stylebox (stylebox_name, "DropDownItem") :
-				style = theme.get_stylebox (stylebox_name , "DropDownItem")
+				Update_DropDownBtn_Icon ()
 
-			elif theme.has_stylebox (stylebox_name , "FlatButton") :
-				style = theme.get_stylebox (stylebox_name , "FlatButton")
+			"DropDownItem" :
+				for stylebox_name in styleboxlist :
+					var style
 
-			elif current_theme and current_theme.has_stylebox (stylebox_name , "FlatButton") :
-				style = current_theme.get_stylebox (stylebox_name , "FlatButton")
+					if theme.has_stylebox (stylebox_name, "DropDownItem") :
+						style = theme.get_stylebox (stylebox_name , "DropDownItem")
 
-			if style :
-				for nodes_item in NodeList_Items :
-					nodes_item.add_theme_stylebox_override (stylebox_name, style)
+					elif theme.has_stylebox (stylebox_name , "FlatButton") :
+						style = theme.get_stylebox (stylebox_name , "FlatButton")
 
-#DropDownItemBackground
-		var temp_style
+					elif current_theme and current_theme.has_stylebox (stylebox_name , "FlatButton") :
+						style = current_theme.get_stylebox (stylebox_name , "FlatButton")
 
-		if theme.has_stylebox ("Background" , "DropDownItem") :
-			temp_style = theme.get_stylebox ("Background" , "DropDownItem")
+					if style :
+						for nodes_item in NodeList_Items :
+							nodes_item.add_theme_stylebox_override (stylebox_name, style)
 
-		elif theme.has_stylebox ("normal" , "LineEdit") :
-			temp_style = theme.get_stylebox ("normal" , "LineEdit")
+			"DropDownItemBackground" :
+				var temp_style
+				if theme.has_stylebox ("background" , "DropDownItem") :
+					temp_style = theme.get_stylebox ("background" , "DropDownItem")
 
-		elif current_theme and current_theme.has_stylebox ("normal" , "LineEdit") :
-			temp_style = current_theme.get_stylebox ("normal" , "LineEdit")
+				elif theme.has_stylebox ("normal" , "LineEdit") :
+					temp_style = theme.get_stylebox ("normal" , "LineEdit")
 
-		if temp_style :
-			Node_Background.add_theme_stylebox_override ("panel" , temp_style)
+				elif current_theme and current_theme.has_stylebox ("normal" , "LineEdit") :
+					temp_style = current_theme.get_stylebox ("normal" , "LineEdit")
 
-		_Modify_theme = false
+				if temp_style :
+					Node_Background.add_theme_stylebox_override ("panel" , temp_style)
 
-	Update_DropDownButton_Icon ()
+	_Modify_theme = false
 
-func Update_DropDownButton_Icon () :
+func Update_DropDownBtn_Icon () :
 	var temp_str1 = "down"
 	var temp_str2 = ""
 	if DropDown_Is_DropDown :
@@ -340,7 +448,7 @@ func Update_DropDownButton_Icon () :
 		temp_str2 = "_disabled"
 	elif Node_Button.button_pressed :
 		temp_str2 = "_pressed"
-	elif DropDownButton_Is_Touch :
+	elif DropDownBtn_Is_Touch :
 		temp_str2 = "_hover"
 	else :
 		temp_str2 = ""
@@ -349,3 +457,128 @@ func Update_DropDownButton_Icon () :
 
 	if theme_icon :
 		Node_Button.add_theme_icon_override ("icon", theme_icon)
+
+func Update_Alignment () :
+	self.alignment = DropDown_Alignment
+	self.icon_alignment = DropDown_IconAlignment
+	self.vertical_icon_alignment = DropDown_IconAlignment_Vertical
+
+	for node : Button in NodeList_Items :
+		node.alignment = DropDownItem_Alignment
+		node.icon_alignment = DropDownItem_IconAlignment
+		node.vertical_icon_alignment = DropDownItem_IconAlignment_Vertical
+
+func Update_SelfDisplay () :
+		if DropDown_Index != -1 && DropDownItem_Items.size () > 0 :
+			self.text = DropDownItem_Items[DropDown_Index].Text
+			self.icon = DropDownItem_Items[DropDown_Index].Icon
+		else :
+			self.text = ""
+			self.icon = null
+#endregion
+
+
+#region 设置Item
+func Add_Item (value) :
+	DropDownItem_Items += [OptionItem.new ()]
+	Set_Item (value , DropDownItem_Items.size () - 1)
+
+func Add_Items (Array_value : Array) :
+	for value_2 in Array_value :
+		Add_Item (value_2)
+
+func Set_Item (value , ID : int = 0) :
+	if ID < 0 :
+		printerr (	"Set_Item: 索引低于最小值")
+		printerr (	"├─	索引:")
+		printerr (	"│	└─	" , ID)
+		#printerr (	"└─	你是脑袋被驴踢了吗,居然试图设置第 ",ID," 个Item的数据,你家List有低于第0个的元素啊")
+		#咳咳，我们应该文明用词
+		printerr (	"└─	List/Array列表没有低于第 0 个的元素")
+
+		print ()
+		return
+
+	var MAX_ITEMS = DropDownItem_Items.size () - 1
+	if ID > MAX_ITEMS :
+		printerr (	"Set_Item: 索引超出列表长度")
+		printerr (	"├─	索引:")
+		printerr (	"│	└─	" , ID)
+		printerr (	"└─	列表最大项:")
+		printerr (	"	└─	" , MAX_ITEMS)
+
+		print ()
+		return
+
+	if value is String :
+		DropDownItem_Items[ID].Text = value
+	elif value is Texture :
+		DropDownItem_Items[ID].Icon = value
+	elif value is bool :
+		DropDownItem_Items[ID].Disabled = value
+	elif value is OptionItem :
+		DropDownItem_Items[ID] = value
+
+	elif value is Array :
+		for value_1 in value :
+			if value_1 is String :
+				DropDownItem_Items[ID].Text = value_1
+			elif value_1 is Texture :
+				DropDownItem_Items[ID].Icon = value_1
+			elif value_1 is bool :
+				DropDownItem_Items[ID].Disabled = value_1
+
+	elif value is Dictionary :
+		for value_key : String in value :
+			var value_value = value[value_key]
+
+			match value_key.to_lower () :
+				"text" , "name" , "label" :
+					if value_value is String :
+						DropDownItem_Items[ID].Text = value_value
+
+				"icon" , "image" :
+					if value_value is Texture :
+						DropDownItem_Items[ID].Icon = value_value
+
+				"disabled" , "disable" :
+					DropDownItem_Items[ID].Disabled = bool (value_value)
+#endregion
+
+
+func Select_NonDisabled (value : int) -> int :
+	if value != -1 and value < DropDownItem_Items.size () and DropDownItem_Items[value].Disabled :
+		if DropDownItem_Items.size () <= 1 :
+			value = -1
+
+		else :
+			var temp_int = 1
+			var Previous = 0
+			var Next = 0
+
+			while DropDownItem_Items.size () > temp_int + value :
+				if not DropDownItem_Items[temp_int + value].Disabled :
+					Next = temp_int
+					break
+				temp_int += 1
+
+			temp_int = -1
+			while -1 < temp_int + value :
+				if not DropDownItem_Items[temp_int + value].Disabled :
+					Previous = temp_int
+					break
+				temp_int -= 1
+
+			if Scroll_direction == 1 :
+				if Next != 0 :
+					value += Next
+				elif Previous != 0 :
+					value += Previous
+
+			elif Scroll_direction == 0 :
+				if Previous != 0 :
+					value += Previous
+				elif Next != 0 :
+					value += Next
+
+	return value

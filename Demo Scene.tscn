@@ -7,19 +7,44 @@
 [ext_resource type="StyleBox" uid="uid://bkik5x7ncrw7x" path="res://Demo Theme/DropDown/disabled.tres" id="3_k60n3"]
 [ext_resource type="StyleBox" uid="uid://bsi3lxir43yvq" path="res://Demo Theme/DropDown/hover.tres" id="4_tvxeg"]
 [ext_resource type="StyleBox" uid="uid://c3hd1br305303" path="res://style_box_empty.tres" id="6_tvxeg"]
-[ext_resource type="Script" uid="uid://cxylwneos738y" path="res://Controls/DropDown/OptionItem.gd" id="8_ipwy3"]
+[ext_resource type="Script" uid="uid://cxylwneos738y" path="res://Controls/DropDown/OptionItem.gd" id="8_do1v3"]
 
 [sub_resource type="Resource" id="Resource_ipwy3"]
-script = ExtResource("8_ipwy3")
-Text = "1"
+script = ExtResource("8_do1v3")
+Text = "Text 0"
 
 [sub_resource type="Resource" id="Resource_do1v3"]
-script = ExtResource("8_ipwy3")
-Text = "2"
+script = ExtResource("8_do1v3")
+Text = "Text 1"
+Disabled = true
 
 [sub_resource type="Resource" id="Resource_y2twt"]
-script = ExtResource("8_ipwy3")
-Text = "3"
+script = ExtResource("8_do1v3")
+Text = "Text 2"
+
+[sub_resource type="Resource" id="Resource_761q5"]
+script = ExtResource("8_do1v3")
+Text = "Text 3"
+Disabled = true
+
+[sub_resource type="DPITexture" id="DPITexture_ipwy3"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"8\"><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" d=\"m12 2-4 3.5L4 2\"/></svg>
+"
+
+[sub_resource type="Resource" id="Resource_o63mf"]
+script = ExtResource("8_do1v3")
+Text = "Text 4"
+Icon = SubResource("DPITexture_ipwy3")
+Disabled = true
+
+[sub_resource type="DPITexture" id="DPITexture_do1v3"]
+_source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"8\"><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" d=\"m12 2-4 3.5L4 2\"/></svg>
+"
+
+[sub_resource type="Resource" id="Resource_d3ohx"]
+script = ExtResource("8_do1v3")
+Text = "Text 5"
+Icon = SubResource("DPITexture_do1v3")
 
 [node name="Control" type="Control" unique_id=662438839]
 layout_mode = 3
@@ -29,17 +54,22 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="DropDown" type="Button" parent="." unique_id=936140169]
+[node name="DropDown" type="Button" parent="." unique_id=295432578]
 layout_mode = 0
-offset_right = 128.0
-offset_bottom = 32.0
+offset_left = 32.0
+offset_top = 32.0
+offset_right = 160.0
+offset_bottom = 64.0
 theme = ExtResource("1_s4lb6")
 theme_override_styles/normal = ExtResource("2_3kh3t")
 theme_override_styles/pressed = ExtResource("3_cpn48")
 theme_override_styles/hover = ExtResource("4_tvxeg")
 theme_override_styles/disabled = ExtResource("3_k60n3")
 theme_override_styles/focus = ExtResource("6_tvxeg")
+text = "Text 0"
+alignment = 0
 script = ExtResource("1_nuqbx")
+DropDown_Index = 0
 DropDownItem_Position = Vector2(0, 32)
-DropDownItem_Items = Array[ExtResource("8_ipwy3")]([SubResource("Resource_ipwy3"), SubResource("Resource_do1v3"), SubResource("Resource_y2twt")])
+DropDownItem_Items = Array[ExtResource("8_do1v3")]([SubResource("Resource_ipwy3"), SubResource("Resource_do1v3"), SubResource("Resource_y2twt"), SubResource("Resource_761q5"), SubResource("Resource_o63mf"), SubResource("Resource_d3ohx")])
 metadata/_custom_type_script = "uid://biuyl3np3cco3"

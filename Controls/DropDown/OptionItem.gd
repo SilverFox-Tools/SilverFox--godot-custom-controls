@@ -3,7 +3,7 @@
 # 作者: 东方银狐
 # GitHub: https://github.com/bilibiliDFYH
 # 许可证: MIT
-# V0.2
+# V0.3
 # ============================================
 
 class_name OptionItem
@@ -28,7 +28,7 @@ var _parent : DropDown = null
 
 func _notify_parent () :
 	if _parent :
-		_parent.Update_Items ()
+		_parent.Update_Items ("ItemDisplay")
 
 func set_parent (parent: DropDown) :
 	_parent = parent
