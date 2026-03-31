@@ -23,10 +23,6 @@ window/size/viewport_width=1280
 window/size/viewport_height=720
 window/size/sharp_corners=true
 
-[gui]
-
-theme/custom="uid://dxsr23suevg7q"
-
 [importer_defaults]
 
 texture={

@@ -1,9 +1,14 @@
 # ============================================
 # DropDown 下拉控件
-# 作者: 东方银狐
-# GitHub: https://github.com/bilibiliDFYH
+# 作者:
+# ——>	东方银狐 / DFYH / DF.SilverFox
+# ———	——>	https://github.com/bilibiliDFYH
+#
+# 组织: 东方银狐的奇妙工具 / SilverFox-Tools
+# ——>	https://github.com/SilverFox-Tools
+#
 # 许可证: MIT
-# V0.3
+# V0.3a
 # ============================================
 
 @tool
@@ -22,6 +27,9 @@ var Node_Button : Button = Button.new ()
 var Node_Background : Panel = Panel.new ()
 var Node_Item : Control = Control.new ()
 var NodeList_Items : Array[Button] = []
+
+var DefaultTheme = ThemeDB.get_project_theme ()
+var EditorTheme = ThemeDB.get_default_theme ()
 
 #region 下拉栏 DropDown_
 @export_group ("下拉栏", "DropDown_")
@@ -351,88 +359,98 @@ func Update_Items (Type : String = "Redraw") :
 
 #region 设置外观
 func Set_Theme (Type : String = "All") :
-	var current_theme
 	var styleboxlist = ["normal" , "hover" , "pressed" , "disabled" , "focus"]
 	var iconlist = ["" , "_hover" , "_pressed" , "_disabled"]
 
-	if Type != "All" :
-		current_theme = ThemeDB.get_default_theme ()
+	_Modify_theme = true
 
-		if !theme :
-			theme = ThemeDB.get_project_theme ()
+	match Type :
+		"All" :
+			Set_Theme ("DropDown")
+			Set_Theme ("DropDownBtn")
+			Set_Theme ("DropDownBtn-Icon")
+			Set_Theme ("DropDownItem")
+			Set_Theme ("DropDownItemBackground")
 
-	if theme :
-		_Modify_theme = true
+		"DropDown" :
+			for stylebox_name in styleboxlist :
+				var style : StyleBox
+				var LineEdit_stylebox_name : String = "normal"
+				if stylebox_name == "disabled" :
+					LineEdit_stylebox_name = "read_only"
+				elif stylebox_name == "focus" :
+					LineEdit_stylebox_name = "focus"
 
-		match Type :
-			"All" :
-				Set_Theme ("DropDown")
-				Set_Theme ("DropDownBtn")
-				Set_Theme ("DropDownBtn-Icon")
-				Set_Theme ("DropDownItem")
-				Set_Theme ("DropDownItemBackground")
+				var fallback_item = HandleTheme.FallbackItem.new (LineEdit_stylebox_name , "LineEdit")
 
-			"DropDown" :
-				for stylebox_name in styleboxlist :
-					var style = theme.get_stylebox (stylebox_name , "DropDown")
-					if !style :
-						style = theme.get_stylebox ("normal" , "LineEdit")
-					if current_theme and !style :
-						style = current_theme.get_stylebox ("normal" , "LineEdit")
+				style = HandleTheme.get_style (theme , stylebox_name , "DropDown" , [fallback_item])
+				if !style :
+					style = HandleTheme.get_style (DefaultTheme , stylebox_name , "DropDown" , [fallback_item])
+				if !style :
+					style = HandleTheme.get_style (EditorTheme , fallback_item.name , fallback_item.theme_type)
 
-					if style :
-						self.add_theme_stylebox_override (stylebox_name, style)
+				self.add_theme_stylebox_override (stylebox_name, style)
 
-			"DropDownBtn" :
-				for stylebox_name in styleboxlist :
-					var style = theme.get_stylebox (stylebox_name , "DropDownBtn")
-					if style :
-						Node_Button.add_theme_stylebox_override (stylebox_name, style)
+		"DropDownBtn" :
+			for stylebox_name in styleboxlist :
+				var style : StyleBox
 
-			"DropDownBtn-Icon" :
-				for icon_name in iconlist :
-					for temp_str in ["up" , "down"] :
-						var theme_icon = theme.get_icon (temp_str + icon_name , "DropDownBtn")
-						if !theme_icon :
-							theme_icon = theme.get_icon (temp_str + icon_name , "SpinBox")
-						if current_theme and !theme_icon :
-							theme_icon = current_theme.get_icon (temp_str + icon_name , "LineEdit")
+				var fallback_item = HandleTheme.FallbackItem.new (stylebox_name , "Button")
 
-						if theme_icon :
-							Node_Button.add_theme_icon_override (temp_str + icon_name, theme_icon)
+				style = HandleTheme.get_style (theme , stylebox_name , "DropDownBtn" , [fallback_item])
+				if !style :
+					style = HandleTheme.get_style (DefaultTheme , stylebox_name , "DropDownBtn" , [fallback_item])
+				if !style :
+					style = HandleTheme.get_style (EditorTheme , fallback_item.name , fallback_item.theme_type)
 
-				Update_DropDownBtn_Icon ()
+				Node_Button.add_theme_stylebox_override (stylebox_name, style)
 
-			"DropDownItem" :
-				for stylebox_name in styleboxlist :
-					var style
+		"DropDownBtn-Icon" :
+			for icon_name in iconlist :
+				for temp_str in ["up" , "down"] :
+					var theme_icon : Texture
+					var icon_Fullname = temp_str + icon_name
 
-					if theme.has_stylebox (stylebox_name, "DropDownItem") :
-						style = theme.get_stylebox (stylebox_name , "DropDownItem")
+					var fallback_item = HandleTheme.FallbackItem.new (icon_Fullname , "SpinBox")
 
-					elif theme.has_stylebox (stylebox_name , "FlatButton") :
-						style = theme.get_stylebox (stylebox_name , "FlatButton")
+					theme_icon = HandleTheme.get_icon (theme , icon_Fullname , "DropDownBtn" , [fallback_item])
+					if !theme_icon :
+						theme_icon = HandleTheme.get_icon (DefaultTheme , icon_Fullname , "DropDownBtn" , [fallback_item])
+					if !theme_icon :
+						theme_icon = HandleTheme.get_icon (EditorTheme , fallback_item.name , fallback_item.theme_type)
 
-					elif current_theme and current_theme.has_stylebox (stylebox_name , "FlatButton") :
-						style = current_theme.get_stylebox (stylebox_name , "FlatButton")
+					if theme_icon :
+						Node_Button.add_theme_icon_override (icon_Fullname , theme_icon)
 
-					if style :
-						for nodes_item in NodeList_Items :
-							nodes_item.add_theme_stylebox_override (stylebox_name, style)
+			Update_DropDownBtn_Icon ()
 
-			"DropDownItemBackground" :
-				var temp_style
-				if theme.has_stylebox ("background" , "DropDownItem") :
-					temp_style = theme.get_stylebox ("background" , "DropDownItem")
+		"DropDownItem" :
+			for stylebox_name in styleboxlist :
+				var style : StyleBox
 
-				elif theme.has_stylebox ("normal" , "LineEdit") :
-					temp_style = theme.get_stylebox ("normal" , "LineEdit")
+				var fallback_item = HandleTheme.FallbackItem.new (stylebox_name , "FlatButton")
 
-				elif current_theme and current_theme.has_stylebox ("normal" , "LineEdit") :
-					temp_style = current_theme.get_stylebox ("normal" , "LineEdit")
+				style = HandleTheme.get_style (theme , stylebox_name , "DropDownItem" , [fallback_item])
+				if !style :
+					style = HandleTheme.get_style (DefaultTheme , stylebox_name , "DropDownItem" , [fallback_item])
+				if !style :
+					style = HandleTheme.get_style (EditorTheme , fallback_item.name , fallback_item.theme_type)
 
-				if temp_style :
-					Node_Background.add_theme_stylebox_override ("panel" , temp_style)
+				for nodes_item in NodeList_Items :
+					nodes_item.add_theme_stylebox_override (stylebox_name, style)
+
+		"DropDownItemBackground" :
+			var temp_style : StyleBox
+
+			var temp_fallback_item = HandleTheme.FallbackItem.new ("normal" , "LineEdit")
+
+			temp_style = HandleTheme.get_style (theme , "background" , "DropDownItem" , [temp_fallback_item])
+			if !temp_style :
+				temp_style = HandleTheme.get_style (DefaultTheme , "background" , "DropDownItem" , [temp_fallback_item])
+			if !temp_style :
+				temp_style = HandleTheme.get_style (EditorTheme , temp_fallback_item.name , temp_fallback_item.theme_type)
+
+			Node_Background.add_theme_stylebox_override ("panel" , temp_style)
 
 	_Modify_theme = false
 

@@ -1,7 +1,12 @@
 # ============================================
 # OptionItem 选项资源
-# 作者: 东方银狐
-# GitHub: https://github.com/bilibiliDFYH
+# 作者:
+# ——>	东方银狐 / DFYH / DF.SilverFox
+# ———	——>	https://github.com/bilibiliDFYH
+#
+# 组织: 东方银狐的奇妙工具 / SilverFox-Tools
+# ——>	https://github.com/SilverFox-Tools
+#
 # 许可证: MIT
 # V0.3
 # ============================================

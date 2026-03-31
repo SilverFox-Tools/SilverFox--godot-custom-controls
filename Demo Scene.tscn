@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dvjunaikmua66"]
 
+[ext_resource type="Theme" uid="uid://dxsr23suevg7q" path="res://Demo Theme.tres" id="1_ipwy3"]
 [ext_resource type="Script" uid="uid://biuyl3np3cco3" path="res://Controls/DropDown/DropDown.gd" id="1_nuqbx"]
-[ext_resource type="Theme" uid="uid://dxsr23suevg7q" path="res://Demo Theme.tres" id="1_s4lb6"]
 [ext_resource type="StyleBox" uid="uid://u5dxpy7ppvcg" path="res://Demo Theme/DropDown/normal.tres" id="2_3kh3t"]
 [ext_resource type="StyleBox" uid="uid://b2thqffpc6bna" path="res://Demo Theme/DropDown/pressed.tres" id="3_cpn48"]
 [ext_resource type="StyleBox" uid="uid://bkik5x7ncrw7x" path="res://Demo Theme/DropDown/disabled.tres" id="3_k60n3"]
@@ -60,16 +60,14 @@ offset_left = 32.0
 offset_top = 32.0
 offset_right = 160.0
 offset_bottom = 64.0
-theme = ExtResource("1_s4lb6")
+theme = ExtResource("1_ipwy3")
 theme_override_styles/normal = ExtResource("2_3kh3t")
 theme_override_styles/pressed = ExtResource("3_cpn48")
 theme_override_styles/hover = ExtResource("4_tvxeg")
 theme_override_styles/disabled = ExtResource("3_k60n3")
 theme_override_styles/focus = ExtResource("6_tvxeg")
-text = "Text 0"
 alignment = 0
 script = ExtResource("1_nuqbx")
-DropDown_Index = 0
 DropDownItem_Position = Vector2(0, 32)
 DropDownItem_Items = Array[ExtResource("8_do1v3")]([SubResource("Resource_ipwy3"), SubResource("Resource_do1v3"), SubResource("Resource_y2twt"), SubResource("Resource_761q5"), SubResource("Resource_o63mf"), SubResource("Resource_d3ohx")])
 metadata/_custom_type_script = "uid://biuyl3np3cco3"
