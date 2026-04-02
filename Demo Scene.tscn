@@ -8,6 +8,7 @@
 [ext_resource type="StyleBox" uid="uid://bsi3lxir43yvq" path="res://Demo Theme/DropDown/hover.tres" id="4_tvxeg"]
 [ext_resource type="StyleBox" uid="uid://c3hd1br305303" path="res://style_box_empty.tres" id="6_tvxeg"]
 [ext_resource type="Script" uid="uid://cxylwneos738y" path="res://Controls/DropDown/OptionItem.gd" id="8_do1v3"]
+[ext_resource type="Script" uid="uid://bt6xewg2wlu4s" path="res://Controls/WindowTitle/WindowTitle.gd" id="9_do1v3"]
 
 [sub_resource type="Resource" id="Resource_ipwy3"]
 script = ExtResource("8_do1v3")
@@ -71,3 +72,10 @@ script = ExtResource("1_nuqbx")
 DropDownItem_Position = Vector2(0, 32)
 DropDownItem_Items = Array[ExtResource("8_do1v3")]([SubResource("Resource_ipwy3"), SubResource("Resource_do1v3"), SubResource("Resource_y2twt"), SubResource("Resource_761q5"), SubResource("Resource_o63mf"), SubResource("Resource_d3ohx")])
 metadata/_custom_type_script = "uid://biuyl3np3cco3"
+
+[node name="WindowTitle" type="Panel" parent="." unique_id=810358211]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("9_do1v3")
+metadata/_custom_type_script = "uid://bt6xewg2wlu4s"
