@@ -234,8 +234,10 @@ func _ready () -> void :
 var _last_disabled = self.disabled
 func _process (_delta : float) -> void :
 	if _last_disabled != self.disabled :
-		Update_DropDownBtn_Icon ()
 		Node_Button.disabled = self.disabled
+		if disabled :
+			DropDown_Is_DropDown = false
+		Update_DropDownBtn_Icon ()
 
 	_last_disabled = self.disabled
 
@@ -266,12 +268,12 @@ var temp_Rolling_volume = 0.0
 func _gui_input (event : InputEvent) -> void :
 	if event is InputEventMouseButton :
 		if event.button_index == MOUSE_BUTTON_WHEEL_UP :
-			if DropDown_Is_Touch :
+			if DropDown_Is_Touch and not disabled :
 				Scroll_direction = 0
 				temp_Rolling_volume -= 0.5
 
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN :
-			if DropDown_Is_Touch :
+			if DropDown_Is_Touch and not disabled :
 				Scroll_direction = 1
 				temp_Rolling_volume += 0.5
 
@@ -279,12 +281,12 @@ func _gui_input (event : InputEvent) -> void :
 		match event.keycode :
 			KEY_UP :
 				if event.pressed :
-					if DropDown_Is_Touch :
+					if DropDown_Is_Touch and not disabled :
 						Scroll_direction = 0
 						temp_Rolling_volume -= 1
 			KEY_DOWN :
 				if event.pressed :
-					if DropDown_Is_Touch :
+					if DropDown_Is_Touch and not disabled :
 						Scroll_direction = 1
 						temp_Rolling_volume += 1
 			KEY_ESCAPE :
