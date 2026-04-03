@@ -7,6 +7,9 @@
 # 组织: 东方银狐的奇妙工具 / SilverFox-Tools
 # ——>	https://github.com/SilverFox-Tools
 #
+# 仓库: 银狐的 Godot 自定义控件 / SilverFox--godot-custom-controls
+# ——>	https://github.com/SilverFox-Tools/SilverFox--godot-custom-controls
+#
 # 许可证: MIT
 # V0.1
 # ============================================
