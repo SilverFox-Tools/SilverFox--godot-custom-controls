@@ -11,7 +11,7 @@
 # ——>	https://github.com/SilverFox-Tools/SilverFox--godot-custom-controls
 #
 # 许可证: MIT
-# V0.1
+# V1.0
 # ============================================
 
 class_name HandleTheme

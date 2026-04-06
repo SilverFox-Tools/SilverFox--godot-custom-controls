@@ -11,7 +11,7 @@
 # ——>	https://github.com/SilverFox-Tools/SilverFox--godot-custom-controls
 #
 # 许可证: MIT
-# V0.3a
+# V1.0
 # ============================================
 
 @tool
@@ -193,18 +193,7 @@ func _notification (what : int) :
 		Set_Theme ()
 
 func Calculate_DropDownBtn_Position () :
-	if DropDownBtn_PositionMod == 0 :
-		Node_Button.position = Vector2 (DropDown_Size.x , 0) + DropDownBtn_Position
-	elif DropDownBtn_PositionMod == 1 :
-		Node_Button.position = Vector2 (DropDown_Size.x - DropDownBtn_Size.x , 0) + DropDownBtn_Position
-
-	elif DropDownBtn_PositionMod == 2 :
-		Node_Button.position = Vector2 (0 - DropDownBtn_Size.x , 0) + DropDownBtn_Position
-	elif DropDownBtn_PositionMod == 3 :
-		Node_Button.position = DropDownBtn_Position
-
-	else :
-		Node_Button.position = DropDownBtn_Position
+	Node_Button.position = Enums.Application_PositionMode (DropDownBtn_PositionMod , DropDown_Size , DropDownBtn_Size , DropDownBtn_Position)
 #endregion
 
 func _ready () -> void :

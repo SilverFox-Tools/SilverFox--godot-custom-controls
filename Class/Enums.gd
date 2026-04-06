@@ -11,7 +11,7 @@
 # ——>	https://github.com/SilverFox-Tools/SilverFox--godot-custom-controls
 #
 # 许可证: MIT
-# V0.1
+# V1.0
 # ============================================
 
 @tool
@@ -26,3 +26,21 @@ enum PositionMode {
 	INTERNAL_LEFT ,		## 内部左侧，以 父级物体 左上方 为0点 (再坐标系是左上到右下的情况下，和自由位置效果相同)
 	FREE ,				## 自由位置，直接设置position
 }
+
+static func Application_PositionMode (Position_Mode : PositionMode , Parent_Size : Vector2 , Size : Vector2 , Position : Vector2) -> Vector2 :
+	var retrun_Position : Vector2
+
+	if Position_Mode == 0 :
+		retrun_Position = Vector2 (Parent_Size.x , 0) + Position
+	elif Position_Mode == 1 :
+		retrun_Position = Vector2 (Parent_Size.x - Size.x , 0) + Position
+
+	elif Position_Mode == 2 :
+		retrun_Position = Vector2 (0 - Size.x , 0) + Position
+	elif Position_Mode == 3 :
+		retrun_Position = Position
+
+	else :
+		retrun_Position = Position
+
+	return retrun_Position

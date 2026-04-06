@@ -1,8 +1,17 @@
 [gd_resource type="Theme" format=3 uid="uid://dxsr23suevg7q"]
 
+[ext_resource type="StyleBox" uid="uid://c4wuutswsd686" path="res://Demo Theme/CustomWindow/TitleButton/normal.tres" id="1_4ar36"]
+[ext_resource type="Texture2D" uid="uid://c34bktjfk73wg" path="res://Demo Theme/CustomWindow/TitleButton/icon_close.svg" id="1_4pf6b"]
+[ext_resource type="StyleBox" uid="uid://gtl2kpmrmonl" path="res://Demo Theme/CustomWindow/TitleButton/disabled.tres" id="1_5a2s2"]
+[ext_resource type="StyleBox" uid="uid://or18kqqf8l87" path="res://Demo Theme/CustomWindow/window.tres" id="1_fncgs"]
 [ext_resource type="StyleBox" uid="uid://bkik5x7ncrw7x" path="res://Demo Theme/DropDown/disabled.tres" id="1_fq4h3"]
+[ext_resource type="Texture2D" uid="uid://ct6uc48f4j6ns" path="res://Demo Theme/CustomWindow/TitleButton/icon_minimize.svg" id="2_agcti"]
 [ext_resource type="StyleBox" uid="uid://c3hd1br305303" path="res://style_box_empty.tres" id="2_jhq1v"]
+[ext_resource type="Texture2D" uid="uid://dbxrqhh28omr" path="res://Demo Theme/CustomWindow/TitleButton/icon_maximize.svg" id="2_jx3yr"]
+[ext_resource type="StyleBox" uid="uid://ckpigxfb0of1b" path="res://Demo Theme/CustomWindow/TitleButton/hover.tres" id="2_vhm4w"]
 [ext_resource type="StyleBox" uid="uid://bsi3lxir43yvq" path="res://Demo Theme/DropDown/hover.tres" id="3_5o2i5"]
+[ext_resource type="Texture2D" uid="uid://buetghg5olj7i" path="res://Demo Theme/CustomWindow/TitleButton/icon_maximize_restore.svg" id="3_jx3yr"]
+[ext_resource type="StyleBox" uid="uid://bfnlwi34mh103" path="res://Demo Theme/CustomWindow/TitleButton/pressed.tres" id="4_4pf6b"]
 [ext_resource type="StyleBox" uid="uid://u5dxpy7ppvcg" path="res://Demo Theme/DropDown/normal.tres" id="4_nco80"]
 [ext_resource type="StyleBox" uid="uid://b2thqffpc6bna" path="res://Demo Theme/DropDown/pressed.tres" id="5_htu4b"]
 [ext_resource type="StyleBox" uid="uid://c34ue4evdsgeb" path="res://Demo Theme/DropDown/DropDownButton/disabled.tres" id="6_l6efw"]
@@ -15,6 +24,7 @@
 [ext_resource type="StyleBox" uid="uid://beugahpxnsp8y" path="res://Demo Theme/DropDown/DropDownItem/hover.tres" id="12_xw8qd"]
 [ext_resource type="StyleBox" uid="uid://dg686s56ymc2y" path="res://Demo Theme/DropDown/DropDownItem/normal.tres" id="13_fncgs"]
 [ext_resource type="StyleBox" uid="uid://erxm6aejkxtp" path="res://Demo Theme/DropDown/DropDownItem/pressed.tres" id="14_ivj3l"]
+[ext_resource type="StyleBox" uid="uid://cchsn72074faf" path="res://Demo Theme/WindowTitle/title.tres" id="17_ivj3l"]
 
 [sub_resource type="DPITexture" id="DPITexture_qtetv"]
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"8\"><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" d=\"m12 2-4 3.5L4 2\"/></svg>
@@ -24,7 +34,21 @@ _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"8\"><
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"8\"><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" d=\"m4 6 4-3.5L12 6\"/></svg>
 "
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jx3yr"]
+bg_color = Color(0.12941177, 0.14901961, 0.18039216, 1)
+
 [resource]
+default_font_size = 16
+CustomWindow/icons/close_icon = ExtResource("1_4pf6b")
+CustomWindow/icons/maximize_icon = ExtResource("2_jx3yr")
+CustomWindow/icons/maximize_icon_restore = ExtResource("3_jx3yr")
+CustomWindow/icons/minimize_icon = ExtResource("2_agcti")
+CustomWindow/styles/default_disabled = ExtResource("1_5a2s2")
+CustomWindow/styles/default_focus = ExtResource("2_jhq1v")
+CustomWindow/styles/default_hover = ExtResource("2_vhm4w")
+CustomWindow/styles/default_normal = ExtResource("1_4ar36")
+CustomWindow/styles/default_pressed = ExtResource("4_4pf6b")
+CustomWindow/styles/window = ExtResource("1_fncgs")
 DropDown/styles/disabled = ExtResource("1_fq4h3")
 DropDown/styles/focus = ExtResource("2_jhq1v")
 DropDown/styles/hover = ExtResource("3_5o2i5")
@@ -49,3 +73,5 @@ DropDownItem/styles/focus = ExtResource("12_fncgs")
 DropDownItem/styles/hover = ExtResource("12_xw8qd")
 DropDownItem/styles/normal = ExtResource("13_fncgs")
 DropDownItem/styles/pressed = ExtResource("14_ivj3l")
+Tree/styles/panel = SubResource("StyleBoxFlat_jx3yr")
+WindowTitle/styles/title = ExtResource("17_ivj3l")

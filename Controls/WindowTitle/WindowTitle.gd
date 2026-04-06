@@ -11,7 +11,7 @@
 # ——>	https://github.com/SilverFox-Tools/SilverFox--godot-custom-controls
 #
 # 许可证: MIT
-# V0.2
+# V0.3
 # ============================================
 
 @tool
@@ -31,6 +31,9 @@ var Parent_Position : Vector2
 
 var Node_Text : Label = Label.new ()
 
+var DefaultTheme = ThemeDB.get_project_theme ()
+var EditorTheme = ThemeDB.get_default_theme ()
+
 @export var Title : String = "Title" :
 	set (value) :
 		Title = value
@@ -49,9 +52,15 @@ var Node_Text : Label = Label.new ()
 		if Node_Text :
 			Node_Text.size = value
 
+@export_tool_button ("默认设置 TitleText Position and Size") var SetDefault_Title_Text_Btn = SetDefault_Title_Text
+func SetDefault_Title_Text () :
+	Title_Position = Vector2 (4 , 4)
+	Title_Size = Vector2 (self.size.x , self.size.y) - Title_Position * 2
+
 #region 再编辑器里初始化 Initialize in the editor
 var _added_to_scene = false
 var Engine_ready = false
+var _Modify_theme = false
 
 func _notification (what : int) :
 	#if what == NOTIFICATION_RESIZED and Engine.is_editor_hint () and Engine_ready :
@@ -68,9 +77,10 @@ func _notification (what : int) :
 		Node_Text.text = Title
 
 		Set_Node ()
+		Set_Theme ()
 
-	#if what == NOTIFICATION_THEME_CHANGED and not _Modify_theme :
-		#Set_Theme ()
+	if what == NOTIFICATION_THEME_CHANGED and not _Modify_theme :
+		Set_Theme ()
 #endregion
 
 func _ready () -> void :
@@ -80,6 +90,7 @@ func _ready () -> void :
 
 	self.mouse_entered.connect (MouseEntered)
 	self.mouse_exited.connect (MouseExited)
+	Set_Theme ()
 
 func _process (_delta : float) -> void :
 	if not Node_Parent and self.is_inside_tree () :
@@ -113,3 +124,21 @@ func MouseExited () :
 func Set_Node () :
 	Node_Text.position = Title_Position
 	Node_Text.size = Title_Size
+
+
+func Set_Theme () :
+	_Modify_theme = true
+
+	var style : StyleBox
+
+	var fallback_item = HandleTheme.FallbackItem.new ("panel" , "Panel")
+
+	style = HandleTheme.get_style (theme , "title" , "WindowTitle" , [fallback_item])
+	if !style :
+		style = HandleTheme.get_style (DefaultTheme , "title" , "WindowTitle" , [fallback_item])
+	if !style :
+		style = HandleTheme.get_style (EditorTheme , fallback_item.name , fallback_item.theme_type)
+
+	self.add_theme_stylebox_override ("panel", style)
+
+	_Modify_theme = false
