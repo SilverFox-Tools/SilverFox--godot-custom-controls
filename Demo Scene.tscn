@@ -11,21 +11,22 @@
 [ext_resource type="StyleBox" uid="uid://c3hd1br305303" path="res://style_box_empty.tres" id="6_tvxeg"]
 [ext_resource type="Script" uid="uid://cxylwneos738y" path="res://Controls/DropDown/OptionItem.gd" id="8_do1v3"]
 [ext_resource type="Script" uid="uid://1rvtkqk07gv0" path="res://Controls/Window/Window.gd" id="9_y2twt"]
+[ext_resource type="Script" uid="uid://baiiuq17blipb" path="res://Controls/Explorer/Explorer.gd" id="12_o63mf"]
 
-[sub_resource type="Resource" id="Resource_ipwy3"]
+[sub_resource type="Resource" id="Resource_761q5"]
 script = ExtResource("8_do1v3")
 Text = "Text 0"
 
-[sub_resource type="Resource" id="Resource_do1v3"]
+[sub_resource type="Resource" id="Resource_o63mf"]
 script = ExtResource("8_do1v3")
 Text = "Text 1"
 Disabled = true
 
-[sub_resource type="Resource" id="Resource_y2twt"]
+[sub_resource type="Resource" id="Resource_d3ohx"]
 script = ExtResource("8_do1v3")
 Text = "Text 2"
 
-[sub_resource type="Resource" id="Resource_761q5"]
+[sub_resource type="Resource" id="Resource_dtb4h"]
 script = ExtResource("8_do1v3")
 Text = "Text 3"
 Disabled = true
@@ -34,7 +35,7 @@ Disabled = true
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"8\"><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" d=\"m12 2-4 3.5L4 2\"/></svg>
 "
 
-[sub_resource type="Resource" id="Resource_o63mf"]
+[sub_resource type="Resource" id="Resource_0f0c2"]
 script = ExtResource("8_do1v3")
 Text = "Text 4"
 Icon = SubResource("DPITexture_ipwy3")
@@ -44,7 +45,7 @@ Disabled = true
 _source = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"16\" height=\"8\"><path fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" d=\"m12 2-4 3.5L4 2\"/></svg>
 "
 
-[sub_resource type="Resource" id="Resource_d3ohx"]
+[sub_resource type="Resource" id="Resource_7yesg"]
 script = ExtResource("8_do1v3")
 Text = "Text 5"
 Icon = SubResource("DPITexture_do1v3")
@@ -54,9 +55,11 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_left = 384.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_ipwy3")
+metadata/_edit_horizontal_guides_ = [-89.0]
 
 [node name="Insignificant" type="Node" parent="." unique_id=1900414445]
 
@@ -66,13 +69,16 @@ anchor_bottom = 1.0
 offset_right = 384.0
 grow_vertical = 2
 theme = ExtResource("1_ipwy3")
+columns = 3
+column_titles_visible = true
+hide_root = true
 script = ExtResource("2_761q5")
 
 [node name="DropDown" type="Button" parent="." unique_id=295432578]
 layout_mode = 0
-offset_left = 416.0
+offset_left = 32.0
 offset_top = 32.0
-offset_right = 544.0
+offset_right = 160.0
 offset_bottom = 64.0
 theme = ExtResource("1_ipwy3")
 theme_override_styles/normal = ExtResource("2_3kh3t")
@@ -83,41 +89,31 @@ theme_override_styles/focus = ExtResource("6_tvxeg")
 alignment = 0
 script = ExtResource("1_nuqbx")
 DropDownItem_Position = Vector2(0, 32)
-DropDownItem_Items = Array[ExtResource("8_do1v3")]([SubResource("Resource_ipwy3"), SubResource("Resource_do1v3"), SubResource("Resource_y2twt"), SubResource("Resource_761q5"), SubResource("Resource_o63mf"), SubResource("Resource_d3ohx")])
+DropDownItem_Items = Array[ExtResource("8_do1v3")]([SubResource("Resource_761q5"), SubResource("Resource_o63mf"), SubResource("Resource_d3ohx"), SubResource("Resource_dtb4h"), SubResource("Resource_0f0c2"), SubResource("Resource_7yesg")])
 metadata/_custom_type_script = "uid://biuyl3np3cco3"
 
 [node name="CustomWindow" type="Panel" parent="." unique_id=1107782930]
 layout_mode = 0
-offset_left = 600.0
+offset_left = 216.0
 offset_top = 64.0
-offset_right = 856.0
+offset_right = 472.0
 offset_bottom = 256.0
 theme = ExtResource("1_ipwy3")
 theme_override_styles/panel = ExtResource("2_do1v3")
 script = ExtResource("9_y2twt")
-Window_Restrict_PositionMod = 2
-Window_Restrict_Position = Vector4(-256, 0, 128, 112)
-Title_TextPosition = Vector2(8, 4)
-Title_TextSize = Vector2(240, 24)
-TitleBtn_Maximize = true
-TitleBtn_BtnSize = Vector2(24, 24)
-TitleBtn_BtnPosition = Vector2(-4, 4)
 metadata/_custom_type_script = "uid://1rvtkqk07gv0"
 
-[node name="DropDown" type="Button" parent="CustomWindow" unique_id=1887083212]
+[node name="Explorer" type="Panel" parent="." unique_id=2129023541]
 layout_mode = 0
-offset_left = 16.0
-offset_top = 16.0
-offset_right = 144.0
-offset_bottom = 48.0
+offset_left = 32.0
+offset_top = 320.0
+offset_right = 864.0
+offset_bottom = 688.0
 theme = ExtResource("1_ipwy3")
-theme_override_styles/normal = ExtResource("2_3kh3t")
-theme_override_styles/pressed = ExtResource("3_cpn48")
-theme_override_styles/hover = ExtResource("4_tvxeg")
-theme_override_styles/disabled = ExtResource("3_k60n3")
-theme_override_styles/focus = ExtResource("6_tvxeg")
-alignment = 0
-script = ExtResource("1_nuqbx")
-DropDownItem_Position = Vector2(0, 32)
-DropDownItem_Items = Array[ExtResource("8_do1v3")]([SubResource("Resource_ipwy3"), SubResource("Resource_do1v3"), SubResource("Resource_y2twt"), SubResource("Resource_761q5"), SubResource("Resource_o63mf"), SubResource("Resource_d3ohx")])
-metadata/_custom_type_script = "uid://biuyl3np3cco3"
+theme_override_styles/panel = ExtResource("2_do1v3")
+script = ExtResource("12_o63mf")
+Sidebar_BookmarkHeight = 64.0
+Sidebar_QuickAccessHeight = 64.0
+Sidebar_VolumeHeight = 64.0
+Sidebar_RecentFoldersHeight = 64.0
+metadata/_custom_type_script = "uid://1rvtkqk07gv0"

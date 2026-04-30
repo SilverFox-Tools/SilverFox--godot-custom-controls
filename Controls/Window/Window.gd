@@ -1,327 +1,254 @@
-# ============================================
-# Window 窗口
-# 作者:
-# ——>	东方银狐 / DFYH / DF.SilverFox
-# ———	——>	https://github.com/bilibiliDFYH
-#
-# 组织: 东方银狐的奇妙工具 / SilverFox-Tools
-# ——>	https://github.com/SilverFox-Tools
-#
-# 仓库: 银狐的 Godot 自定义控件 / SilverFox--godot-custom-controls
-# ——>	https://github.com/SilverFox-Tools/SilverFox--godot-custom-controls
-#
-# 许可证: MIT
-# V0.2
-# ============================================
+##============================================[br]
+##Window 窗口[br]
+##作者 :[br]
+##——>	东方银狐 / DFYH / DF.SilverFox[br]
+##———	——>	https://github.com/bilibiliDFYH[br]
+##[br]
+##组织 : 东方银狐的奇妙工具 / SilverFox-Tools[br]
+##——>	https://github.com/SilverFox-Tools[br]
+##[br]
+##仓库 : 银狐的 Godot 自定义控件 / SilverFox--godot-custom-controls[br]
+##——>	https://github.com/SilverFox-Tools/SilverFox--godot-custom-controls[br]
+##[br]
+##许可证: MIT[br]
+##V0.3[br]
+##============================================[br]
+##@tutorial(开发者 : 东方银狐 / DFYH / DF.SilverFox):https://github.com/bilibiliDFYH
+##@tutorial(组织 : 东方银狐的奇妙工具 / SilverFox-Tools) : https://github.com/SilverFox-Tools
+##@tutorial(仓库 : 银狐的 Godot 自定义控件 / SilverFox--godot-custom-controls) : https://github.com/SilverFox-Tools/SilverFox--godot-custom-controls
 
 @tool
 class_name CustomWindow
 extends Panel
 
-var Node_WindowTitle : WindowTitle = WindowTitle.new ()
+#region Node
+##标题栏Node , 类型为 [WindowTitle]
+var Node_WindowTitle : WindowTitle = WindowTitle.new () 
+#endregion
 
-var Node_TitleBtn_Icon : TextureRect = TextureRect.new ()
-var Node_TitleBtn_Minimize : Button = Button.new ()
-var Node_TitleBtn_Maximize : Button = Button.new ()
-var Node_TitleBtn_Close : Button = Button.new ()
-
-enum RestrictMode {
-	FREE = 0 ,
-	PARENT = 1 ,
-	VIEWPORT = 2,
+##标题栏位置[br]
+##设置 [member Node_WindowTitle] 的位置
+enum TitleEnum_Position {
+	Up ,	## 在窗口上方 , 标题栏 高度 为 [member Title_Size]
+	Down ,	## 在窗口下方 , 标题栏 宽度 为 [member Title_Size]
+	Left ,	## 在窗口左方 , 标题栏 高度 为 [member Title_Size]
+	Right ,	## 在窗口右方 , 标题栏 宽度 为 [member Title_Size]
 }
 
-var old_Position : Vector2
-
-var DefaultTheme = ThemeDB.get_project_theme ()
-var EditorTheme = ThemeDB.get_default_theme ()
-
-#region 窗口 Window
+#region 编辑器面板 窗口 Window
 @export_group ("窗口", "Window_")
-@export var Window_Restrict_PositionMod : RestrictMode = 0 as RestrictMode
-@export var Window_Restrict_Position : Vector4 = Vector4 (self.size.x / 2 , 0 , self.size.x / 2 , (self.size.y + Title_Height) / 2)
-
-@export_tool_button ("默认设置 RestrictPosition") var RestrictPosition_resetBtn = Restrict_Position_reset
-func Restrict_Position_reset () :
-	var temp_Title_Height = 0
-	if Window_Title :
-		temp_Title_Height = Title_Height
-
-	Window_Restrict_Position = Vector4 (self.size.x / 2 , 0 , self.size.x / 2 , (self.size.y + temp_Title_Height) / 2)
-
-@export var Window_Title : bool = true :
-	set (value) :
-		Window_Title = value
-		Node_WindowTitle.visible = value
-
-@export var Window_Maximize : bool = false :
-	set (value) :
-		Window_Maximize = value
-		Update_icon ()
 #endregion
 
-
-#region 标题栏 Title
+#region 编辑器面板 标题栏 Title
 @export_group ("标题栏", "Title_")
-@export var Title_Height : int = 32 :
+##标题栏的位置[br]
+##使用 [enum TitleEnum_Position] 枚举[br]
+##默认为在窗口上方
+@export var Title_Position : TitleEnum_Position = TitleEnum_Position.Up :
 	set (value) :
-		value = max (value , 0)
-		Title_Height = value
-		Node_WindowTitle.size.y = Title_Height
-		Node_WindowTitle.position.y = -Node_WindowTitle.size.y
-
-@export var Title_Title : String = "Title" :
+		Title_Position = value
+		Set_Node_CustomWindow ("Title")
+##在 [member Title_Position] 为 [enum TitleEnum_Position]的Up和Down时 , 作为标题栏的 高度[br]
+##在 [member Title_Position] 为 [enum TitleEnum_Position]的Left和Right时 , 作为标题栏的 宽度
+@export var Title_Size : int = 32 :
 	set (value) :
-		Title_Title = value
-		Node_WindowTitle.Title_Title = Title_Title
+		Title_Size = value
+		Set_Node_CustomWindow ("Title")
 
-@export var Title_TextPosition : Vector2 = Vector2.ZERO :
+##允许使用 [member Title_Theme]
+@export var Title_AllowTheme : bool :
+	set (value) :
+		Title_AllowTheme = value
+		Set_Theme_CustomWindow ("Title")
+@export var Title_Theme : Theme :
+	set (value) :
+		Title_Theme = value
+		Set_Theme_CustomWindow ("Title")
+
+@export var Title_Text : String = "Title" :
+	set (value) :
+		Title_Text = value
+		Node_WindowTitle.Title_Text = value
+@export var Title_TextAlignment_Horizontal : HorizontalAlignment = HorizontalAlignment.HORIZONTAL_ALIGNMENT_LEFT :
+	set (value) :
+		Title_TextAlignment_Horizontal = value
+		Node_WindowTitle.Title_TextAlignment_Horizontal = value
+@export var Title_TextAlignment_Vertical : VerticalAlignment = VerticalAlignment.VERTICAL_ALIGNMENT_CENTER :
+	set (value) :
+		Title_TextAlignment_Vertical = value
+		Node_WindowTitle.Title_TextAlignment_Vertical = value
+
+@export var Title_TextPosition : Vector2 = Vector2 (32 , 4) :
 	set (value) :
 		Title_TextPosition = value
-		if Node_WindowTitle :
-			Node_WindowTitle.Title_Position = value
-
-@export var Title_TextSize : Vector2 = Vector2 (self.size.x , Title_Height) :
+		Node_WindowTitle.Title_TextPosition = value
+@export var Title_TextSize : Vector2 = Vector2 (64 , 24) :
 	set (value) :
 		Title_TextSize = value
-		if Node_WindowTitle :
-			Node_WindowTitle.Title_Size = value
-
-@export_tool_button ("默认设置 TitleText Position and Size") var SetDefault_Title_Text_Btn = SetDefault_Title_Text
-func SetDefault_Title_Text () :
-	Title_TextPosition = Vector2 (4 , 4)
-	Title_TextSize = Vector2 (self.size.x , Title_Height) - Title_TextPosition * 2
+		Node_WindowTitle.Title_TextSize = value
 #endregion
 
-
-@export_group ("标题栏按钮", "TitleBtn_")
-@export var TitleBtn_Icon : bool = true
-@export var TitleBtn_Minimize : bool = true :
+#region 编辑器面板 标题栏物体 TitleNode
+@export_group ("标题栏物体", "TitleNode_")
+@export var TitleNode_Allow : Array[bool] = [true , true , true] :
 	set (value) :
-		TitleBtn_Minimize = value
-		Node_TitleBtn_Minimize.visible = value
-		Refresh_TitleBtn_btn_lit ()
-
-@export var TitleBtn_Maximize : bool = false :
+		TitleNode_Allow = value
+		TitleNode_Allow.resize (Node_WindowTitle.TitleNode_BtnNumber)
+		Node_WindowTitle.TitleNode_Allow = value
+@export var TitleNode_Position : Array[Vector2] = [Vector2 (0 , 0) , Vector2 (24 , 0) , Vector2 (48 , 0)] :
 	set (value) :
-		TitleBtn_Maximize = value
-		Node_TitleBtn_Maximize.visible = value
-		Refresh_TitleBtn_btn_lit ()
+		TitleNode_Position = value
+		TitleNode_Position.resize (Node_WindowTitle.TitleNode_BtnNumber)
+		Node_WindowTitle.TitleNode_Position = value
 
-@export var TitleBtn_Close : bool = true :
+@export var TitleNode_AllowIcon : bool = true :
 	set (value) :
-		TitleBtn_Close = value
-		Node_TitleBtn_Close.visible = value
-		Refresh_TitleBtn_btn_lit ()
-
-@export var TitleBtn_IconSize : Vector2 = Vector2 (32 , 32)
-@export var TitleBtn_IconPosition : Vector2 = Vector2.ZERO
-
-@export var TitleBtn_BtnSize : Vector2 = Vector2 (32 , 32) :
+		TitleNode_AllowIcon = value
+		Node_WindowTitle.TitleNode_AllowIcon = value
+@export var TitleNode_IconPosition : Vector2 = Vector2 (4 , 0) :
 	set (value) :
-		TitleBtn_BtnSize = value
-		Set_Node ()
-
-@export var TitleBtn_BtnPosition : Vector2 = Vector2.ZERO :
+		TitleNode_IconPosition = value
+		Node_WindowTitle.TitleNode_IconPosition = value
+@export var TitleNode_IconSize : Vector2 = Vector2 (24 , 24) :
 	set (value) :
-		TitleBtn_BtnPosition = value
-		Set_Node ()
-
-@export var TitleBtn_PositionMode : Enums.PositionMode = 1 as Enums.PositionMode :
+		TitleNode_IconSize = value
+		Node_WindowTitle.TitleNode_IconSize = value
+@export var TitleNode_Icon_PositionModeHorizontal : Enums.PositionMode_Horizontal = Enums.PositionMode_Horizontal.Left :
 	set (value) :
-		TitleBtn_PositionMode = value
-		Set_Node ()
+		TitleNode_Icon_PositionModeHorizontal = value
+		Node_WindowTitle.TitleNode_Icon_PositionModeHorizontal = value
+@export var TitleNode_Icon_PositionModeVertical : Enums.PositionMode_Vertical = Enums.PositionMode_Vertical.Central :
+	set (value) :
+		TitleNode_Icon_PositionModeVertical = value
+		Node_WindowTitle.TitleNode_Icon_PositionModeVertical = value
 
-@export var TitleBtn_BtnOrder : Array[int] = [2 , 1 , 0] :
-	set (List) :
-		List.resize (TitleBtn_btn_lit.size () )
-		TitleBtn_BtnOrder = List
-		Set_Node ()
+@export var TitleNode_BtnPosition : Vector2 = Vector2 (-4 , 0) :
+	set (value) :
+		TitleNode_BtnPosition = value
+		Node_WindowTitle.TitleNode_BtnPosition = value
+@export var TitleNode_BtnSize : Vector2 = Vector2 (24 , 24) :
+	set (value) :
+		TitleNode_BtnSize = value
+		Node_WindowTitle.TitleNode_BtnSize = value
+@export var TitleNode_Btn_PositionModeHorizontal : Enums.PositionMode_Horizontal = Enums.PositionMode_Horizontal.Right :
+	set (value) :
+		TitleNode_Btn_PositionModeHorizontal = value
+		Node_WindowTitle.TitleNode_Btn_PositionModeHorizontal = value
+@export var TitleNode_Btn_PositionModeVertical : Enums.PositionMode_Vertical = Enums.PositionMode_Vertical.Central :
+	set (value) :
+		TitleNode_Btn_PositionModeVertical = value
+		Node_WindowTitle.TitleNode_Btn_PositionModeVertical = value
+#endregion
 
-var TitleBtn_btn_lit : Array
+#region 编辑器面板 主题覆盖 ThemeOverrides
+@export_group ("主题覆盖", "ThemeOverrides_")
+##允许使用 [member ThemeOverrides_Window]
+@export var ThemeOverrides_Allow_Window : bool = false :
+	set (value) :
+		ThemeOverrides_Allow_Window = value
+		Set_Theme_CustomWindow ("Window")
+##StyleBox的覆盖 Window
+@export var ThemeOverrides_Window : StyleBox :
+	set (value) :
+		ThemeOverrides_Window = value
+		Set_Theme_CustomWindow ("Window")
+#endregion
 
-#region 再编辑器里初始化 Initialize in the editor
-var _added_to_scene = false
-var Engine_ready = false
-var _Modify_theme = false
+##重置CustomWindow的按钮
+@export_tool_button ("重置CustomWindow") var ResetCustomWindow_Btn = ResetCustomWindow
+func ResetCustomWindow () :
+	for node in [
+		Node_WindowTitle
+		] :
+		if node and node.is_inside_tree () :
+			node.queue_free ()
 
+	#region 重置node变量
+	Node_WindowTitle = WindowTitle.new ()
+	#endregion
+
+	Initialization_CustomWindow ()
+
+##重置WindowTitle的按钮
+@export_tool_button ("重置WindowTitle") var ResetWindowTitle_Btn = ResetWindowTitle
+func ResetWindowTitle () :
+	if Node_WindowTitle :
+		Node_WindowTitle.ResetWindowTitle ()
+
+
+#region 初始化
+var _AddedToScene_CustomWindow = false
+var _ModifyTheme_CustomWindow = false
 func _notification (what : int) :
-	if what == NOTIFICATION_RESIZED and Engine.is_editor_hint () and Engine_ready :
-		Set_Node ()
-		#DropDown_Size = self.size
-		#Calculate_DropDownBtn_Position ()
+	if what == NOTIFICATION_POST_ENTER_TREE and not _AddedToScene_CustomWindow :
+		_AddedToScene_CustomWindow = true
+		Initialization_CustomWindow ()
 
-	if what == NOTIFICATION_POST_ENTER_TREE and not _added_to_scene :
-		_added_to_scene = true
+	if what == NOTIFICATION_RESIZED :
+		Set_Node_CustomWindow ()
 
-		if Node_WindowTitle and not Node_WindowTitle.is_inside_tree () :
-			add_child (Node_WindowTitle)
+	if what == NOTIFICATION_THEME_CHANGED and not _ModifyTheme_CustomWindow :
+		Set_Theme_CustomWindow ()
 
-			Node_WindowTitle.add_child (Node_TitleBtn_Icon)
-			Node_TitleBtn_Icon.visible = TitleBtn_Icon
-			Node_TitleBtn_Icon.name = "TitleBtn_Icon"
+func Initialization_CustomWindow () :
+	#region 初始化_实例化node
+	add_child (Node_WindowTitle)
+	#设置属性
+	Node_WindowTitle.name = "Window Title"
+	#endregion
 
-			Node_WindowTitle.add_child (Node_TitleBtn_Minimize)
-			Node_TitleBtn_Minimize.visible = TitleBtn_Minimize
-			Node_TitleBtn_Minimize.name = "minimize"
-			Node_TitleBtn_Minimize.expand_icon = true
-			Node_TitleBtn_Minimize.pressed.connect (_Minimize)
-
-			Node_WindowTitle.add_child (Node_TitleBtn_Maximize)
-			Node_TitleBtn_Maximize.visible = TitleBtn_Maximize
-			Node_TitleBtn_Maximize.name = "maximize"
-			Node_TitleBtn_Maximize.expand_icon = true
-			Node_TitleBtn_Maximize.pressed.connect (_Maximize)
-
-			Node_WindowTitle.add_child (Node_TitleBtn_Close)
-			Node_TitleBtn_Close.visible = TitleBtn_Close
-			Node_TitleBtn_Close.name = "close"
-			Node_TitleBtn_Close.expand_icon = true
-			Node_TitleBtn_Close.pressed.connect (_Close)
-
-		Set_Node ()
-		Set_Theme ()
-
-		get_window ().size_changed.connect (apply_Position_Restrict)
-
-	if what == NOTIFICATION_THEME_CHANGED and not _Modify_theme :
-		Set_Theme ()
+	Set_Node_CustomWindow ()
+	Set_Theme_CustomWindow ()
 #endregion
 
-func _ready () -> void :
-	if Engine.is_editor_hint () :
-		await get_tree ().process_frame
-		Engine_ready = true
 
-	Set_Theme ()
+func Set_Node_CustomWindow (Type : String = "All") :
+	match Type :
+		#重绘
+		"All" :
+			Set_Node_CustomWindow ("Title")
 
-	Refresh_TitleBtn_btn_lit ()
-	TitleBtn_BtnOrder = TitleBtn_BtnOrder
+		#标题栏
+		"Title" :
+			Node_WindowTitle.size = self.size
+			match Title_Position :
+				0 , 1 :
+					Node_WindowTitle.size.y = Title_Size
+					Node_WindowTitle.position.x = 0
+				2 , 3 :
+					Node_WindowTitle.size.x = Title_Size
+					Node_WindowTitle.position.y = 0
 
-func _process (_delta : float) -> void :
-	if position != old_Position :
-		apply_Position_Restrict ()
-
-	old_Position = self.position
-
-
-func _Minimize () :
-	self.visible = false
-
-func _Maximize () :
-	self.Window_Maximize = not Window_Maximize
-
-func _Close () :
-	self.queue_free ()
-
-
-func Refresh_TitleBtn_btn_lit () :
-	TitleBtn_btn_lit = []
-	if TitleBtn_Minimize :
-		TitleBtn_btn_lit.append (Node_TitleBtn_Minimize)
-	if TitleBtn_Maximize :
-		TitleBtn_btn_lit.append (Node_TitleBtn_Maximize)
-	if TitleBtn_Close :
-		TitleBtn_btn_lit.append (Node_TitleBtn_Close)
-	TitleBtn_BtnOrder = TitleBtn_BtnOrder
-
-func apply_Position_Restrict () :
-	var temp_Title_Height = 0
-	if Window_Title :
-		temp_Title_Height = Title_Height
-
-	var Parent_Size : Vector2
-	match Window_Restrict_PositionMod :
-		0 :
-			return
-
-		1 :
-			Parent_Size = get_parent ().size
-
-		2 :
-			Parent_Size = get_viewport ().get_visible_rect ().size
-
-	self.position.x = max (self.position.x , -Window_Restrict_Position.x)
-	self.position.y = max (self.position.y , -Window_Restrict_Position.y + temp_Title_Height)
-	self.position.x = min (self.position.x , Parent_Size.x - self.size.x + Window_Restrict_Position.z)
-	self.position.y = min (self.position.y , Parent_Size.y - self.size.y + Window_Restrict_Position.w + temp_Title_Height)
-
-func Set_Node () :
-	Node_WindowTitle.size.x = self.size.x
-	Node_WindowTitle.size.y = Title_Height
-	Node_WindowTitle.position.x = 0
-	Node_WindowTitle.position.y = -Node_WindowTitle.size.y
-
-	Node_TitleBtn_Icon.position = TitleBtn_IconPosition
-
-	var TitleBtn_Initial_position : Vector2 = Enums.Application_PositionMode (TitleBtn_PositionMode , self.size , TitleBtn_BtnSize * TitleBtn_btn_lit.size () , TitleBtn_BtnPosition)
-
-	for temp_node : Button in TitleBtn_btn_lit :
-		temp_node.size = TitleBtn_BtnSize
-
-	var temp_TitleBtn_BtnOrder = TitleBtn_BtnOrder.duplicate ()
-	for i in TitleBtn_btn_lit.size () :
-		var temp_int = temp_TitleBtn_BtnOrder.find (temp_TitleBtn_BtnOrder.max () )
-		temp_TitleBtn_BtnOrder[temp_int] = pow (2 , 31) * -1
-		var temp_node : Button = TitleBtn_btn_lit[temp_int]
-
-		temp_node.position = TitleBtn_Initial_position + Vector2 (TitleBtn_BtnSize.x , 0) * i
+			match Title_Position :
+				0 :
+					Node_WindowTitle.position.y = -Title_Size
+				1 :
+					Node_WindowTitle.position.y = self.size.y
+				2 :
+					Node_WindowTitle.position.x = -Title_Size
+				3 :
+					Node_WindowTitle.position.x = self.size.x
 
 
-func Set_Theme () :
-	_Modify_theme = true
-	if not Node_WindowTitle.theme :
-		Node_WindowTitle.theme = self.theme
+func Set_Theme_CustomWindow (Type : String = "All" , _temp : bool = true) :
+	_ModifyTheme_CustomWindow = true
+	match Type :
+		"All" :
+			pass
+			Set_Theme_CustomWindow ("Window" , false)
+			Set_Theme_CustomWindow ("Title" , false)
 
-	var style : StyleBox
+		"Window" :
+			HandleTheme.apply_style (self , "panel" ,
+				"window" , "CustomWindow" ,
+				"panel" , "Panel" ,
+				ThemeOverrides_Allow_Window , ThemeOverrides_Window)
 
-	var temp_fallback_item = HandleTheme.FallbackItem.new ("panel" , "Panel")
+		"Title" :
+			if Title_AllowTheme and Title_Theme :
+				Node_WindowTitle.theme = Title_Theme
+			else :
+				Node_WindowTitle.theme = self.theme
 
-	style = HandleTheme.get_style (theme , "window" , "CustomWindow" , [temp_fallback_item])
-	if !style :
-		style = HandleTheme.get_style (DefaultTheme , "window" , "CustomWindow" , [temp_fallback_item])
-	if !style :
-		style = HandleTheme.get_style (EditorTheme , temp_fallback_item.name , temp_fallback_item.theme_type)
-
-	self.add_theme_stylebox_override ("panel", style)
-
-
-	var styleboxlist = ["normal" , "hover" , "pressed" , "disabled" , "focus"]
-
-	for temp_node : Button in [Node_TitleBtn_Minimize , Node_TitleBtn_Maximize , Node_TitleBtn_Close] :
-		for name_stylebox in styleboxlist :
-			var name_stylebox_2 = temp_node.name + "_" + name_stylebox
-
-			var fallback_item_0 = HandleTheme.FallbackItem.new ("default_" + name_stylebox , "CustomWindow")
-			var fallback_item_1 = HandleTheme.FallbackItem.new (name_stylebox , "Button")
-
-			style = HandleTheme.get_style (theme , name_stylebox_2 , "CustomWindow" , [fallback_item_0 , fallback_item_1])
-			if !style :
-				style = HandleTheme.get_style (DefaultTheme , name_stylebox_2 , "CustomWindow" , [fallback_item_0 , fallback_item_1])
-			if !style :
-				style = HandleTheme.get_style (EditorTheme , fallback_item_1.name , fallback_item_1.theme_type)
-
-			temp_node.add_theme_stylebox_override (name_stylebox , style)
-
-		if temp_node.name == "maximize" :
-			var temp_icon = HandleTheme.get_icon (theme , temp_node.name + "_icon" , "CustomWindow")
-			if temp_icon :
-				temp_node.add_theme_icon_override (temp_node.name + "_icon" , temp_icon)
-
-			temp_icon = HandleTheme.get_icon (theme , temp_node.name + "_icon_restore" , "CustomWindow")
-			if temp_icon :
-				temp_node.add_theme_icon_override (temp_node.name + "_icon_restore" , temp_icon)
-
-			Update_icon ()
-
-		else :
-			var temp_icon = HandleTheme.get_icon (theme , temp_node.name + "_icon" , "CustomWindow")
-			temp_node.icon = temp_icon
-
-	_Modify_theme = false
-
-func Update_icon () :
-	if Window_Maximize :
-		Node_TitleBtn_Maximize.icon = Node_TitleBtn_Maximize.get_theme_icon ("maximize_icon_restore")
-	else :
-		Node_TitleBtn_Maximize.icon = Node_TitleBtn_Maximize.get_theme_icon ("maximize_icon")
+	if _temp :
+		_ModifyTheme_CustomWindow = false

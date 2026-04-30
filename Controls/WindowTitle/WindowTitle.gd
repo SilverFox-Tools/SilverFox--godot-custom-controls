@@ -1,144 +1,308 @@
-# ============================================
-# WindowTitle 窗口标题栏
-# 作者:
-# ——>	东方银狐 / DFYH / DF.SilverFox
-# ———	——>	https://github.com/bilibiliDFYH
-#
-# 组织: 东方银狐的奇妙工具 / SilverFox-Tools
-# ——>	https://github.com/SilverFox-Tools
-#
-# 仓库: 银狐的 Godot 自定义控件 / SilverFox--godot-custom-controls
-# ——>	https://github.com/SilverFox-Tools/SilverFox--godot-custom-controls
-#
-# 许可证: MIT
-# V0.3
-# ============================================
+##============================================[br]
+##WindowTitle 窗口标题栏
+##作者 :[br]
+##——>	东方银狐 / DFYH / DF.SilverFox[br]
+##———	——>	https://github.com/bilibiliDFYH[br]
+##[br]
+##组织 : 东方银狐的奇妙工具 / SilverFox-Tools[br]
+##——>	https://github.com/SilverFox-Tools[br]
+##[br]
+##仓库 : 银狐的 Godot 自定义控件 / SilverFox--godot-custom-controls[br]
+##——>	https://github.com/SilverFox-Tools/SilverFox--godot-custom-controls[br]
+##[br]
+##许可证: MIT[br]
+##V0.4[br]
+##============================================[br]
+##@tutorial(开发者 : 东方银狐 / DFYH / DF.SilverFox):https://github.com/bilibiliDFYH
+##@tutorial(组织 : 东方银狐的奇妙工具 / SilverFox-Tools) : https://github.com/SilverFox-Tools
+##@tutorial(仓库 : 银狐的 Godot 自定义控件 / SilverFox--godot-custom-controls) : https://github.com/SilverFox-Tools/SilverFox--godot-custom-controls
 
 @tool
 class_name WindowTitle
 extends Panel
 
+#region Node
+##标题栏Node , 类型为 [WindowTitle]
+var Node_Text : Label = Label.new () 
 var Node_Parent : Control
+
+var Node_Icon : TextureRect = TextureRect.new ()
+var Node_Btn_Minimize : Button = Button.new ()
+var Node_Btn_Maximize : Button = Button.new ()
+var Node_Btn_Close : Button = Button.new ()
+#endregion
+
+var IsPressed : bool = false
+var IsTouch : bool = false
+var IsDrag : bool = false
 
 var Mouse_Position : Vector2
 var old_Mouse_Position : Vector2
 
-var IsTouch : bool = false
-var MousePressed : bool = false
-var IsDrag : bool = false
+var TitleNode_BtnNumber = 3
+var TitleNode_NodeList : Array[Control] = [Node_Btn_Minimize , Node_Btn_Maximize , Node_Btn_Close]
 
-var Parent_Position : Vector2
-
-var Node_Text : Label = Label.new ()
-
-var DefaultTheme = ThemeDB.get_project_theme ()
-var EditorTheme = ThemeDB.get_default_theme ()
-
-@export var Title : String = "Title" :
+#region 编辑器面板 标题栏 Title
+@export_group ("标题栏", "Title_")
+@export var Title_Text : String = "Title" :
 	set (value) :
-		Title = value
-		if Node_Text :
-			Node_Text.text = value
-
-@export var Title_Position : Vector2 = Vector2.ZERO :
+		Title_Text = value
+		Node_Text.text = value
+@export var Title_TextAlignment_Horizontal : HorizontalAlignment = HorizontalAlignment.HORIZONTAL_ALIGNMENT_LEFT :
 	set (value) :
-		Title_Position = value
-		if Node_Text :
-			Node_Text.position = value
-
-@export var Title_Size : Vector2 = self.size :
+		Title_TextAlignment_Horizontal = value
+		Node_Text.horizontal_alignment = value
+@export var Title_TextAlignment_Vertical : VerticalAlignment = VerticalAlignment.VERTICAL_ALIGNMENT_CENTER :
 	set (value) :
-		Title_Size = value
-		if Node_Text :
-			Node_Text.size = value
+		Title_TextAlignment_Vertical = value
+		Node_Text.vertical_alignment = value
 
-@export_tool_button ("默认设置 TitleText Position and Size") var SetDefault_Title_Text_Btn = SetDefault_Title_Text
-func SetDefault_Title_Text () :
-	Title_Position = Vector2 (4 , 4)
-	Title_Size = Vector2 (self.size.x , self.size.y) - Title_Position * 2
-
-#region 再编辑器里初始化 Initialize in the editor
-var _added_to_scene = false
-var Engine_ready = false
-var _Modify_theme = false
-
-func _notification (what : int) :
-	#if what == NOTIFICATION_RESIZED and Engine.is_editor_hint () and Engine_ready :
-		#Set_Node ()
-		#DropDown_Size = self.size
-		#Calculate_DropDownBtn_Position ()
-
-	if what == NOTIFICATION_POST_ENTER_TREE and not _added_to_scene :
-		_added_to_scene = true
-
-		if Node_Text and not Node_Text.is_inside_tree () :
-			add_child (Node_Text)
-		Node_Text.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-		Node_Text.text = Title
-
-		Set_Node ()
-		Set_Theme ()
-
-	if what == NOTIFICATION_THEME_CHANGED and not _Modify_theme :
-		Set_Theme ()
+@export var Title_TextPosition : Vector2 = Vector2 (32 , 4) :
+	set (value) :
+		Title_TextPosition = value
+		Node_Text.position = value
+@export var Title_TextSize : Vector2 = Vector2 (64 , 24) :
+	set (value) :
+		Title_TextSize = value
+		Node_Text.size = value
 #endregion
 
-func _ready () -> void :
-	if Engine.is_editor_hint () :
-		await get_tree ().process_frame
-		Engine_ready = true
+#region 编辑器面板 标题栏物体 TitleNode
+@export_group ("标题栏物体", "TitleNode_")
+@export var TitleNode_Allow : Array[bool] = [true , true , true] :
+	set (value) :
+		TitleNode_Allow = value
+		Set_Node_WindowTitle ("TitleNode")
+@export var TitleNode_Position : Array[Vector2] = [Vector2 (0 , 0) , Vector2 (24 , 0) , Vector2 (48 , 0)] :
+	set (value) :
+		TitleNode_Position = value
+		Set_Node_WindowTitle ("TitleNode")
 
-	self.mouse_entered.connect (MouseEntered)
-	self.mouse_exited.connect (MouseExited)
-	Set_Theme ()
+@export var TitleNode_AllowIcon : bool = true :
+	set (value) :
+		TitleNode_AllowIcon = value
+@export var TitleNode_IconPosition : Vector2 = Vector2 (4 , 4) :
+	set (value) :
+		TitleNode_IconPosition = value
+		Set_Node_WindowTitle ("TitleNode")
+@export var TitleNode_IconSize : Vector2 = Vector2 (24 , 24) :
+	set (value) :
+		value.x = max (value.x , 0)
+		value.y = max (value.y , 0)
+		TitleNode_IconSize = value
+		Set_Node_WindowTitle ("TitleNode")
+@export var TitleNode_Icon_PositionModeHorizontal : Enums.PositionMode_Horizontal = Enums.PositionMode_Horizontal.Left :
+	set (value) :
+		TitleNode_Icon_PositionModeHorizontal = value
+		Set_Node_WindowTitle ("TitleNode")
+@export var TitleNode_Icon_PositionModeVertical : Enums.PositionMode_Vertical = Enums.PositionMode_Vertical.Central :
+	set (value) :
+		TitleNode_Icon_PositionModeVertical = value
+		Set_Node_WindowTitle ("TitleNode")
+
+@export var TitleNode_BtnPosition : Vector2 = Vector2 (-4 , 0) :
+	set (value) :
+		TitleNode_BtnPosition = value
+		Set_Node_WindowTitle ("TitleNode")
+@export var TitleNode_BtnSize : Vector2 = Vector2 (24 , 24) :
+	set (value) :
+		value.x = max (value.x , 0)
+		value.y = max (value.y , 0)
+		TitleNode_BtnSize = value
+		Set_Node_WindowTitle ("TitleNode")
+@export var TitleNode_Btn_PositionModeHorizontal : Enums.PositionMode_Horizontal = Enums.PositionMode_Horizontal.Right :
+	set (value) :
+		TitleNode_Btn_PositionModeHorizontal = value
+		Set_Node_WindowTitle ("TitleNode")
+@export var TitleNode_Btn_PositionModeVertical : Enums.PositionMode_Vertical = Enums.PositionMode_Vertical.Central :
+	set (value) :
+		TitleNode_Btn_PositionModeVertical = value
+		Set_Node_WindowTitle ("TitleNode")
+#endregion
+
+#region 编辑器面板 主题覆盖 ThemeOverrides
+@export_group ("主题覆盖", "ThemeOverrides_")
+##允许使用 [member ThemeOverrides_Title]
+@export var ThemeOverrides_Allow_Title : bool = false :
+	set (value) :
+		ThemeOverrides_Allow_Title = value
+		Set_Theme_WindowTitle ("Title")
+##StyleBox的覆盖 Title
+@export var ThemeOverrides_Title : StyleBox :
+	set (value) :
+		ThemeOverrides_Title = value
+		Set_Theme_WindowTitle ("Title")
+
+##允许使用 [member ThemeOverrides_Button]
+@export var ThemeOverrides_Allow_Button : bool = false :
+	set (value) :
+		ThemeOverrides_Allow_Title = value
+		Set_Theme_WindowTitle ("Node")
+##StyleBox的覆盖 Button
+@export var ThemeOverrides_Button : StyleBox :
+	set (value) :
+		ThemeOverrides_Title = value
+		Set_Theme_WindowTitle ("Node")
+#endregion
+
+##重置WindowTitle的按钮
+@export_tool_button ("重置WindowTitle") var ResetWindowTitle_Btn = ResetWindowTitle
+func ResetWindowTitle () :
+	for node in [
+		Node_Text , Node_Icon , Node_Btn_Minimize , Node_Btn_Maximize , Node_Btn_Close
+		] :
+		if node and node.is_inside_tree () :
+			node.queue_free ()
+
+	#region 重置node变量
+	Node_Text = Label.new ()
+	Node_Icon = TextureRect.new ()
+	Node_Btn_Minimize = Button.new ()
+	Node_Btn_Maximize = Button.new ()
+	Node_Btn_Close = Button.new ()
+	#endregion
+
+	TitleNode_NodeList = [Node_Btn_Minimize , Node_Btn_Maximize , Node_Btn_Close]
+
+	Initialization_WindowTitle ()
+
+
+#region 初始化
+var _AddedToScene_WindowTitle = false
+var _ModifyTheme_WindowTitle = false
+func _notification (what : int) :
+	if what == NOTIFICATION_POST_ENTER_TREE and not _AddedToScene_WindowTitle :
+		_AddedToScene_WindowTitle = true
+		Initialization_WindowTitle ()
+
+	if what == NOTIFICATION_RESIZED :
+		Set_Node_WindowTitle ()
+
+	if what == NOTIFICATION_THEME_CHANGED and not _ModifyTheme_WindowTitle :
+		Set_Theme_WindowTitle ()
+
+func Initialization_WindowTitle () :
+	#region 初始化_实例化node
+	add_child (Node_Text)
+	add_child (Node_Icon)
+	add_child (Node_Btn_Minimize)
+	add_child (Node_Btn_Maximize)
+	add_child (Node_Btn_Close)
+	#设置属性
+	Node_Text.name = "Text"
+	Node_Icon.name = "Icon"
+	Node_Btn_Minimize.name	= "Btn Minimize"
+	Node_Btn_Maximize.name	= "Btn Maximize"
+	Node_Btn_Close.name		= "Btn Close"
+	#endregion
+
+	Set_Node_WindowTitle ()
+	Set_Theme_WindowTitle ()
+#endregion
+
+
+func _input (event : InputEvent) -> void :
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT :
+		IsPressed = event.pressed and (IsTouch or IsDrag)
+
+
+func _ready () -> void :
+	Mouse_Position = get_viewport ().get_mouse_position ()
+	old_Mouse_Position = Mouse_Position
+	self.mouse_entered.connect (func () : IsTouch = true)
+	self.mouse_exited.connect (func () : IsTouch = false)
 
 func _process (_delta : float) -> void :
+	Mouse_Position = get_viewport ().get_mouse_position ()
 	if not Node_Parent and self.is_inside_tree () :
 		Node_Parent = get_parent ()
 
-	if not Engine.is_editor_hint () :
-		Mouse_Position = get_viewport ().get_mouse_position ()
+	if not IsPressed :
+		IsDrag = false
 
-		MousePressed = Input.is_mouse_button_pressed (MOUSE_BUTTON_LEFT) and (IsTouch or IsDrag)
-
-		if IsTouch and MousePressed and not IsDrag :
-			if Node_Parent :
-				Parent_Position = Node_Parent.position
-				old_Mouse_Position = Mouse_Position
-
-		var Offset : Vector2 = Mouse_Position - old_Mouse_Position
-
-		if (IsTouch or IsDrag) and MousePressed :
+	if not IsDrag :
+		if IsPressed and IsTouch :
 			IsDrag = true
-			if Node_Parent :
-				Node_Parent.position = Parent_Position + Offset
-		if !MousePressed :
-			IsDrag = false
 
-func MouseEntered () :
-	IsTouch = true
+	if IsDrag and not old_Mouse_Position == Mouse_Position :
+		var temp_Offset : Vector2 = Mouse_Position - old_Mouse_Position
+		if Node_Parent :
+			Node_Parent.position += temp_Offset
 
-func MouseExited () :
-	IsTouch = false
-
-func Set_Node () :
-	Node_Text.position = Title_Position
-	Node_Text.size = Title_Size
+	old_Mouse_Position = Mouse_Position
 
 
-func Set_Theme () :
-	_Modify_theme = true
+func Set_Node_WindowTitle (Type : String = "All") :
+	match Type :
+		"All" :
+			Set_Node_WindowTitle ("Title")
+			Set_Node_WindowTitle ("TitleNode")
 
-	var style : StyleBox
+		"Title" :
+			Node_Text.text = Title_Text
+			Node_Text.horizontal_alignment = Title_TextAlignment_Horizontal
+			Node_Text.vertical_alignment = Title_TextAlignment_Vertical
+			Node_Text.position = Title_TextPosition
+			Node_Text.size = Title_TextSize
 
-	var fallback_item = HandleTheme.FallbackItem.new ("panel" , "Panel")
+		"TitleNode" :
+			TitleNode_Allow.resize (TitleNode_BtnNumber)
+			TitleNode_Position.resize (TitleNode_BtnNumber)
 
-	style = HandleTheme.get_style (theme , "title" , "WindowTitle" , [fallback_item])
-	if !style :
-		style = HandleTheme.get_style (DefaultTheme , "title" , "WindowTitle" , [fallback_item])
-	if !style :
-		style = HandleTheme.get_style (EditorTheme , fallback_item.name , fallback_item.theme_type)
+			var min_float : float = INF
+			var temp_List_V2 : Array[Vector2] = []
+			var max_pos : Vector2 = Vector2 (- min_float , - min_float)
+			var min_pos : Vector2 = Vector2 (min_float , min_float)
 
-	self.add_theme_stylebox_override ("panel", style)
+			for i in TitleNode_BtnNumber :
+				if TitleNode_Allow[i] :
+					temp_List_V2.append (TitleNode_Position[i])
+			for v2 in temp_List_V2 :
+				max_pos.x = max (max_pos.x , v2.x) 
+				max_pos.y = max (max_pos.y , v2.y) 
+				min_pos.x = min (min_pos.x , v2.x) 
+				min_pos.y = min (min_pos.y , v2.y) 
+			max_pos += TitleNode_BtnSize - min_pos
 
-	_Modify_theme = false
+			var temp_v2 : Vector2 = Enums.PositionMode_Application (
+						TitleNode_Btn_PositionModeHorizontal ,
+						TitleNode_Btn_PositionModeVertical ,
+						self.size , max_pos , TitleNode_BtnPosition
+						) - min_pos
+
+			for i in TitleNode_BtnNumber :
+				var node : Control = TitleNode_NodeList[i]
+				if TitleNode_Allow[i] :
+					node.size = TitleNode_BtnSize
+					node.position = temp_v2 + TitleNode_Position[i]
+					if node and self.is_inside_tree () and not node.is_inside_tree () :
+						add_child (node)
+				elif node and node.is_inside_tree () :
+					remove_child (node)
+
+
+func Set_Theme_WindowTitle (Type : String = "All" , _temp : bool = true) :
+	_ModifyTheme_WindowTitle = true
+	match Type :
+		"All" :
+			pass
+			Set_Theme_WindowTitle ("Title" , false)
+			Set_Theme_WindowTitle ("Node" , false)
+
+		"Title" :
+			HandleTheme.apply_style (self , "panel" ,
+				"title" , "WindowTitle" ,
+				"panel" , "Panel" ,
+				ThemeOverrides_Allow_Title , ThemeOverrides_Title)
+
+		"Node" :
+			for node : Control in TitleNode_NodeList :
+				for type in ["normal" , "hover" , "pressed" , "disabled" , "focus"] :
+					HandleTheme.apply_style (node , type ,
+						"button_" + type , "WindowTitle" ,
+						type , "Button" ,
+						ThemeOverrides_Allow_Title , ThemeOverrides_Title ,
+						self.theme)
+
+	if _temp :
+		_ModifyTheme_WindowTitle = false

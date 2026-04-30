@@ -20,7 +20,8 @@ func _ready() -> void:
 	hide_root = true
 	
 	_create_icons()
-	refresh_tree()
+	if not Engine.is_editor_hint():
+		refresh_tree()
 
 func _create_icons() -> void:
 	# 可见图标：实心白色圆角正方形
@@ -29,16 +30,16 @@ func _create_icons() -> void:
 	# 隐藏图标：空心白色圆角正方形
 	hidden_icon = _create_rounded_rect_icon(16, Color.WHITE, false)
 
-func _create_rounded_rect_icon(size: int, color: Color, filled: bool) -> Texture2D:
-	var img = Image.create(size, size, false, Image.FORMAT_RGBA8)
+func _create_rounded_rect_icon(size_int: int, color: Color, filled: bool) -> Texture2D:
+	var img = Image.create(size_int, size_int, false, Image.FORMAT_RGBA8)
 	img.fill(Color.TRANSPARENT)
 	
-	var radius = size / 4  # 圆角半径
+	var radius = int (size_int / 4.0)  # 圆角半径
 	var rect_min = radius
-	var rect_max = size - radius - 1
+	var rect_max = size_int - radius - 1
 	
-	for x in range(size):
-		for y in range(size):
+	for x in range(size_int):
+		for y in range(size_int):
 			# 计算到四个角的距离
 			var dx = 0.0
 			var dy = 0.0
@@ -50,19 +51,19 @@ func _create_rounded_rect_icon(size: int, color: Color, filled: bool) -> Texture
 				dy = y - radius
 				in_corner = true
 			# 右上角
-			elif x >= size - radius and y < radius:
-				dx = x - (size - radius - 1)
+			elif x >= size_int - radius and y < radius:
+				dx = x - (size_int - radius - 1)
 				dy = y - radius
 				in_corner = true
 			# 左下角
-			elif x < radius and y >= size - radius:
+			elif x < radius and y >= size_int - radius:
 				dx = x - radius
-				dy = y - (size - radius - 1)
+				dy = y - (size_int - radius - 1)
 				in_corner = true
 			# 右下角
-			elif x >= size - radius and y >= size - radius:
-				dx = x - (size - radius - 1)
-				dy = y - (size - radius - 1)
+			elif x >= size_int - radius and y >= size_int - radius:
+				dx = x - (size_int - radius - 1)
+				dy = y - (size_int - radius - 1)
 				in_corner = true
 			
 			if in_corner:
@@ -237,7 +238,7 @@ func _add_node_to_tree(parent_item: TreeItem, node: Node) -> void:
 	_update_item_icon(tree_item, node)
 	
 	# 颜色应用到第0列（节点名称）
-	match node.get_class():
+	match display_type :
 		"Control":
 			tree_item.set_custom_color(0, Color(0.6, 0.8, 1.0))
 		"Node2D":
@@ -246,7 +247,13 @@ func _add_node_to_tree(parent_item: TreeItem, node: Node) -> void:
 			tree_item.set_custom_color(0, Color(1.0, 0.8, 0.6))
 		"Button":
 			tree_item.set_custom_color(0, Color(1.0, 0.6, 0.8))
-	
+		"DropDown" :
+			tree_item.set_custom_color(0, Color("#ff0000"))
+		"CustomWindow" :
+			tree_item.set_custom_color(0, Color("#00ff00"))
+		"Explorer" :
+			tree_item.set_custom_color(0, Color("#00ffff"))
+
 	for child in node.get_children():
 		_add_node_to_tree(tree_item, child)
 
