@@ -11,51 +11,55 @@
 ## 控件列表
 
 ### DropDown
+
 自定义下拉菜单控件，支持选项列表和自定义样式。
 
 ### Explorer
+
 文件浏览器控件，用于导航和选择文件/文件夹。
 
 ### Window
+
 自定义窗口控件。
 
 ### WindowTitle
+
 窗口标题栏控件，支持拖拽，与Window控件配合使用。
 
 ## 项目结构
 
-```
-SilverFox--godot-custom-controls/
-├── LICENSE
-├── <details><summary>Class/</summary>
-│   ├── Enums.gd
-│   ├── Enums.gd.uid
-│   ├── HandlePath.gd
-│   ├── HandlePath.gd.uid
-│   ├── HandleTheme.gd
-│   └── HandleTheme.gd.uid
-</details>
-└── <details><summary>Controls/</summary>
-    ├── <details><summary>DropDown/</summary>
-    │   ├── DropDown.gd
-    │   ├── DropDown.gd.uid
-    │   ├── OptionItem.gd
-    │   └── OptionItem.gd.uid
-    </details>
-    ├── <details><summary>Explorer/</summary>
-    │   ├── Explorer.gd
-    │   └── Explorer.gd.uid
-    </details>
-    ├── <details><summary>Window/</summary>
-    │   ├── Window.gd
-    │   └── Window.gd.uid
-    </details>
-    └── <details><summary>WindowTitle/</summary>
-        ├── WindowTitle.gd
-        └── WindowTitle.gd.uid
-    </details>
-</details>
-```
+项目结构
+
+<details><summary>SilverFox--godot-custom-controls/</summary>
+——>	LICENSE<br>
+	<details><summary>——>	Class/</summary>
+———	——>	Enums.gd<br>
+———	——>	Enums.gd.uid<br>
+———	——>	HandlePath.gd<br>
+———	——>	HandlePath.gd.uid<br>
+———	——>	HandleTheme.gd<br>
+———	——>	HandleTheme.gd.uid<br>
+	</details>
+	<details><summary>——>	Controls/</summary>
+		<details><summary>———	——>	DropDown/</summary>
+———	———	——>	DropDown.gd<br>
+———	———	——>	DropDown.gd.uid<br>
+———	———	——>	OptionItem.gd<br>
+———	———	——>	OptionItem.gd.uid<br>
+		</details>
+		<details><summary>———	——>	Explorer/</summary>
+———	———	——>	Explorer.gd<br>
+———	———	——>	Explorer.gd.uid<br>
+		</details>
+		<details><summary>———	——>	Window/</summary>
+———	———	——>	Window.gd<br>
+———	———	——>	Window.gd.uid<br>
+		</details>
+		<details><summary>———	——>	WindowTitle/</summary>
+———	———	——>	WindowTitle.gd<br>
+———	———	——>	WindowTitle.gd.uid<br>
+		</details>
+	</details>
 
 ## 安装使用
 
@@ -80,4 +84,9 @@ SilverFox--godot-custom-controls/
 
 ## 联系
 
-如有问题或建议，请通过GitHub Issues联系。
+如有问题或建议，请通过  
+    GitHub Issues
+    QQ:1004507596
+    BiliBili:https://space.bilibili.com/3493089798785418
+来联系。
+
