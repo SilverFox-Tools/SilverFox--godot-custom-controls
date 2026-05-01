@@ -4,11 +4,11 @@
 content_margin_left = 6.0
 content_margin_right = 6.0
 bg_color = Color(0.49803922, 0.49803922, 0.49803922, 1)
-border_width_left = 16
-border_width_top = 16
-border_width_right = 16
-border_width_bottom = 16
-border_color = Color(0.62352943, 0.62352943, 0.62352943, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(1, 1, 1, 1)
 border_blend = true
 corner_radius_top_left = 8
 corner_radius_top_right = 8

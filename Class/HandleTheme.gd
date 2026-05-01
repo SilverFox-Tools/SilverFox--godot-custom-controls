@@ -37,6 +37,9 @@ class FallbackItem :
 static func get_style (theme : Theme , name : StringName , theme_type : StringName , List_FallbackItem : Array[FallbackItem] = []) -> StyleBox :
 	var style : StyleBox
 
+	if not DefaultTheme or not EditorTheme :
+		Refresh_DefaultTheme ()
+
 	if theme :
 		if theme.has_stylebox (name , theme_type) :
 			style = theme.get_stylebox (name , theme_type)
@@ -52,6 +55,9 @@ static func get_style (theme : Theme , name : StringName , theme_type : StringNa
 static func get_icon (theme : Theme , name : StringName , theme_type : StringName , List_FallbackItem : Array[FallbackItem] = []) -> Texture :
 	var texture : Texture
 
+	if not DefaultTheme or not EditorTheme :
+		Refresh_DefaultTheme ()
+
 	if theme :
 		if theme.has_icon (name , theme_type) :
 			texture = theme.get_icon (name , theme_type)
@@ -63,6 +69,24 @@ static func get_icon (theme : Theme , name : StringName , theme_type : StringNam
 					break
 
 	return texture
+
+static func get_font (theme : Theme , name : StringName , theme_type : StringName , List_FallbackItem : Array[FallbackItem] = []) -> Font :
+	var font : Font
+
+	if not DefaultTheme or not EditorTheme :
+		Refresh_DefaultTheme ()
+
+	if theme :
+		if theme.has_font (name , theme_type) :
+			font = theme.get_font (name , theme_type)
+
+		if not font and List_FallbackItem.size () > 0 :
+			for Fallback : FallbackItem in List_FallbackItem :
+				if theme.has_font (Fallback.name , Fallback.theme_type) :
+					font = theme.get_font (Fallback.name , Fallback.theme_type)
+					break
+
+	return font
 
 
 static func apply_style (
@@ -88,6 +112,53 @@ static func apply_style (
 
 		if style :
 			node.add_theme_stylebox_override (StyleName , style)
+
+static func apply_icon (
+		node : Control , IconName : String ,
+		Theme_ID : String , Theme_Type : String ,
+		FallbackTheme_ID : String , FallbackTheme_Type : String ,
+		AllowOverrides : bool = false , ThemeOverrides : Texture = null ,
+		theme : Theme = null
+		) -> void :
+	if not theme : theme = node.theme
+
+	if AllowOverrides and ThemeOverrides :
+		node.add_theme_icon_override (IconName , ThemeOverrides)
+	else :
+		var icon : Texture
+		var temp_fallback_item = FallbackItem.new (FallbackTheme_ID , FallbackTheme_Type)
+
+		icon = get_icon (theme , Theme_ID , Theme_Type , [temp_fallback_item])
+		if !icon :
+			icon = get_icon (DefaultTheme , Theme_ID , Theme_Type , [temp_fallback_item])
+		if !icon :
+			icon = get_icon (EditorTheme , temp_fallback_item.name , temp_fallback_item.theme_type)
+
+		node.add_theme_icon_override (IconName , icon)
+
+static func apply_font (
+		node : Control , FontName : String ,
+		Theme_ID : String , Theme_Type : String ,
+		FallbackTheme_ID : String , FallbackTheme_Type : String ,
+		AllowOverrides : bool = false , ThemeOverrides : Font = null ,
+		theme : Theme = null
+		) -> void :
+	if not theme : theme = node.theme
+
+	if AllowOverrides and ThemeOverrides :
+		node.add_theme_font_override (FontName , ThemeOverrides)
+	else :
+		var font : Font
+		var temp_fallback_item = FallbackItem.new (FallbackTheme_ID , FallbackTheme_Type)
+
+		font = get_font (theme , Theme_ID , Theme_Type , [temp_fallback_item])
+		if !font :
+			font = get_font (DefaultTheme , Theme_ID , Theme_Type , [temp_fallback_item])
+		if !font :
+			font = get_font (EditorTheme , temp_fallback_item.name , temp_fallback_item.theme_type)
+
+		if font :
+			node.add_theme_font_override (FontName , font)
 
 
 static func Refresh_DefaultTheme () :

@@ -152,6 +152,49 @@ enum TitleEnum_Position {
 	set (value) :
 		ThemeOverrides_Window = value
 		Set_Theme_CustomWindow ("Window")
+
+@export_group ("主题覆盖 标题栏", "ThemeOverrides_")
+##允许使用 [member ThemeOverrides_Title]
+@export var ThemeOverrides_Allow_Title : bool = false :
+	set (value) :
+		ThemeOverrides_Allow_Title = value
+		Node_WindowTitle.ThemeOverrides_Allow_Title = value
+##StyleBox的覆盖 Title
+@export var ThemeOverrides_Title : StyleBox :
+	set (value) :
+		ThemeOverrides_Title = value
+		Node_WindowTitle.ThemeOverrides_Title = value
+
+@export var ThemeOverrides_Allow_TitleFont : bool = false :
+	set (value) :
+		ThemeOverrides_Allow_TitleFont = value
+		Node_WindowTitle.ThemeOverrides_Allow_TitleFont = ThemeOverrides_Allow_TitleFont
+@export var ThemeOverrides_TitleFont : Font :
+	set (value) :
+		ThemeOverrides_TitleFont = value
+		Node_WindowTitle.ThemeOverrides_TitleFont = ThemeOverrides_TitleFont
+
+@export var ThemeOverrides_AllowButton : Dictionary[String , bool] = {
+	"normal" : false ,
+	"hover" : false ,
+	"pressed" : false ,
+	"disabled" : false ,
+	"focus" : false
+} :
+	set (value) :
+		ThemeOverrides_AllowButton = Node_WindowTitle.Handle_ThemeOverridesButton (value , false)
+		Node_WindowTitle.ThemeOverrides_AllowButton = ThemeOverrides_AllowButton
+
+@export var ThemeOverrides_Button : Dictionary[String , StyleBox] = {
+	"normal" : null ,
+	"hover" : null ,
+	"pressed" : null ,
+	"disabled" : null ,
+	"focus" : null
+} :
+	set (value) :
+		ThemeOverrides_Button = Node_WindowTitle.Handle_ThemeOverridesButton (value , null)
+		Node_WindowTitle.ThemeOverrides_Button = ThemeOverrides_Button
 #endregion
 
 ##重置CustomWindow的按钮

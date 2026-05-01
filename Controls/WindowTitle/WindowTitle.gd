@@ -41,6 +41,7 @@ var old_Mouse_Position : Vector2
 
 var TitleNode_BtnNumber = 3
 var TitleNode_NodeList : Array[Control] = [Node_Btn_Minimize , Node_Btn_Maximize , Node_Btn_Close]
+var Btn_StyleTypeList : Array[String] = ["normal" , "hover" , "pressed" , "disabled" , "focus"]
 
 #region 编辑器面板 标题栏 Title
 @export_group ("标题栏", "Title_")
@@ -133,15 +134,35 @@ var TitleNode_NodeList : Array[Control] = [Node_Btn_Minimize , Node_Btn_Maximize
 		ThemeOverrides_Title = value
 		Set_Theme_WindowTitle ("Title")
 
-##允许使用 [member ThemeOverrides_Button]
-@export var ThemeOverrides_Allow_Button : bool = false :
+@export var ThemeOverrides_Allow_TitleFont : bool = false :
 	set (value) :
-		ThemeOverrides_Allow_Title = value
+		ThemeOverrides_Allow_TitleFont = value
+		Set_Theme_WindowTitle ("Title")
+@export var ThemeOverrides_TitleFont : Font :
+	set (value) :
+		ThemeOverrides_TitleFont = value
+		Set_Theme_WindowTitle ("Title")
+
+@export var ThemeOverrides_AllowButton : Dictionary[String , bool] = {
+	"normal" : false ,
+	"hover" : false ,
+	"pressed" : false ,
+	"disabled" : false ,
+	"focus" : false
+} :
+	set (value) :
+		ThemeOverrides_AllowButton = Handle_ThemeOverridesButton (value , false)
 		Set_Theme_WindowTitle ("Node")
-##StyleBox的覆盖 Button
-@export var ThemeOverrides_Button : StyleBox :
+
+@export var ThemeOverrides_Button : Dictionary[String , StyleBox] = {
+	"normal" : null ,
+	"hover" : null ,
+	"pressed" : null ,
+	"disabled" : null ,
+	"focus" : null
+} :
 	set (value) :
-		ThemeOverrides_Title = value
+		ThemeOverrides_Button = Handle_ThemeOverridesButton (value , null)
 		Set_Theme_WindowTitle ("Node")
 #endregion
 
@@ -295,14 +316,43 @@ func Set_Theme_WindowTitle (Type : String = "All" , _temp : bool = true) :
 				"panel" , "Panel" ,
 				ThemeOverrides_Allow_Title , ThemeOverrides_Title)
 
+			HandleTheme.apply_font (Node_Text , "font" ,
+				"font" , "WindowTitle" ,
+				"font" , "Label" ,
+				ThemeOverrides_Allow_TitleFont , ThemeOverrides_TitleFont ,
+				self.theme)
+
 		"Node" :
 			for node : Control in TitleNode_NodeList :
-				for type in ["normal" , "hover" , "pressed" , "disabled" , "focus"] :
+				for i in Btn_StyleTypeList.size () :
+					var type = Btn_StyleTypeList[i]
 					HandleTheme.apply_style (node , type ,
 						"button_" + type , "WindowTitle" ,
 						type , "Button" ,
-						ThemeOverrides_Allow_Title , ThemeOverrides_Title ,
+						ThemeOverrides_AllowButton[type] , ThemeOverrides_Button[type] ,
 						self.theme)
 
 	if _temp :
 		_ModifyTheme_WindowTitle = false
+
+
+func Handle_ThemeOverridesButton (dictionary : Dictionary , DefaultValue) :
+	if DefaultValue is bool :
+		var temp_Dictionary : Dictionary[String , bool] = {}
+		for type in Btn_StyleTypeList :
+			if dictionary.has (type) :
+				temp_Dictionary[type] = dictionary[type]
+			else :
+				temp_Dictionary[type] = DefaultValue
+
+		return temp_Dictionary
+
+	else :
+		var temp_Dictionary : Dictionary[String , StyleBox] = {}
+		for type in Btn_StyleTypeList :
+			if dictionary.has (type) :
+				temp_Dictionary[type] = dictionary[type]
+			else :
+				temp_Dictionary[type] = DefaultValue
+
+		return temp_Dictionary

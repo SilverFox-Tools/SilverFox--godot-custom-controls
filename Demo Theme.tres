@@ -63,6 +63,7 @@ DropDownItem/styles/normal = ExtResource("13_fncgs")
 DropDownItem/styles/pressed = ExtResource("14_ivj3l")
 Tree/styles/panel = SubResource("StyleBoxFlat_jx3yr")
 WindowTitle/base_type = &"WindowTitle"
+WindowTitle/fonts/font = null
 WindowTitle/styles/button_disabled = ExtResource("17_5a2s2")
 WindowTitle/styles/button_focus = ExtResource("2_jhq1v")
 WindowTitle/styles/button_hover = ExtResource("18_vhm4w")

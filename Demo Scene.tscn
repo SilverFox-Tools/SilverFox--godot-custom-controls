@@ -101,6 +101,13 @@ offset_bottom = 256.0
 theme = ExtResource("1_ipwy3")
 theme_override_styles/panel = ExtResource("2_do1v3")
 script = ExtResource("9_y2twt")
+ThemeOverrides_Button = Dictionary[String, StyleBox]({
+"disabled": null,
+"focus": null,
+"hover": null,
+"normal": ExtResource("3_k60n3"),
+"pressed": null
+})
 metadata/_custom_type_script = "uid://1rvtkqk07gv0"
 
 [node name="Explorer" type="Panel" parent="." unique_id=2129023541]
