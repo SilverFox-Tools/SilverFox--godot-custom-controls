@@ -60,6 +60,7 @@
 ———	———	——>	WindowTitle.gd.uid<br>
 		</details>
 	</details>
+</details>
 
 ## 安装使用
 
