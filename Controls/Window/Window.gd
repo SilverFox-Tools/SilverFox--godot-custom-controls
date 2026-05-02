@@ -210,12 +210,14 @@ func ResetCustomWindow () :
 	Node_WindowTitle = WindowTitle.new ()
 	#endregion
 
+	RefreshVariable_CustomWindow_to_WindowTitle ()
 	Initialization_CustomWindow ()
 
 ##重置WindowTitle的按钮
 @export_tool_button ("重置WindowTitle") var ResetWindowTitle_Btn = ResetWindowTitle
 func ResetWindowTitle () :
 	if Node_WindowTitle :
+		RefreshVariable_CustomWindow_to_WindowTitle ()
 		Node_WindowTitle.ResetWindowTitle ()
 
 
@@ -295,3 +297,36 @@ func Set_Theme_CustomWindow (Type : String = "All" , _temp : bool = true) :
 
 	if _temp :
 		_ModifyTheme_CustomWindow = false
+
+
+func RefreshVariable_CustomWindow_to_WindowTitle () :
+	Set_Theme_CustomWindow ("Title")
+	Node_WindowTitle.Title_Text								= Title_Text
+	Node_WindowTitle.Title_TextAlignment_Horizontal			= Title_TextAlignment_Horizontal
+	Node_WindowTitle.Title_TextAlignment_Vertical			= Title_TextAlignment_Vertical
+	Node_WindowTitle.Title_TextPosition						= Title_TextPosition
+	Node_WindowTitle.Title_TextSize							= Title_TextSize
+
+	TitleNode_Allow.resize (Node_WindowTitle.TitleNode_BtnNumber)
+	Node_WindowTitle.TitleNode_Allow						= TitleNode_Allow
+	TitleNode_Position.resize (Node_WindowTitle.TitleNode_BtnNumber)
+	Node_WindowTitle.TitleNode_Position						= TitleNode_Position
+
+	Node_WindowTitle.TitleNode_AllowIcon					= TitleNode_AllowIcon
+	Node_WindowTitle.TitleNode_IconPosition					= TitleNode_IconPosition
+	Node_WindowTitle.TitleNode_IconSize						= TitleNode_IconSize
+	Node_WindowTitle.TitleNode_Icon_PositionModeHorizontal	= TitleNode_Icon_PositionModeHorizontal
+	Node_WindowTitle.TitleNode_Icon_PositionModeVertical	= TitleNode_Icon_PositionModeVertical
+	Node_WindowTitle.TitleNode_BtnPosition					= TitleNode_BtnPosition
+	Node_WindowTitle.TitleNode_BtnSize						= TitleNode_BtnSize
+	Node_WindowTitle.TitleNode_Btn_PositionModeHorizontal	= TitleNode_Btn_PositionModeHorizontal
+	Node_WindowTitle.TitleNode_Btn_PositionModeVertical		= TitleNode_Btn_PositionModeVertical
+
+	Node_WindowTitle.ThemeOverrides_Allow_Title				= ThemeOverrides_Allow_Title
+	Node_WindowTitle.ThemeOverrides_Title					= ThemeOverrides_Title
+
+	Node_WindowTitle.ThemeOverrides_Allow_TitleFont			= ThemeOverrides_Allow_TitleFont
+	Node_WindowTitle.ThemeOverrides_TitleFont				= ThemeOverrides_TitleFont
+
+	Node_WindowTitle.ThemeOverrides_AllowButton = ThemeOverrides_AllowButton
+	Node_WindowTitle.ThemeOverrides_Button = ThemeOverrides_Button
