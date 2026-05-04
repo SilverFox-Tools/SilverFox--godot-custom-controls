@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="FileIconMapping" format=3 uid="uid://b45hesgf8qvml"]
-
-[ext_resource type="Texture2D" uid="uid://btgp7dix7p0nx" path="res://Demo Theme/Explorer/icon_document.svg" id="1_2phw5"]
-[ext_resource type="Script" uid="uid://ce0gxc4g3mkdt" path="res://Controls/Explorer/FileIconMapping.gd" id="2_8tngn"]
-
-[resource]
-script = ExtResource("2_8tngn")
-Icon = ExtResource("1_2phw5")
-Extensions = Array[String](["txt", "md", "markdown", "rtf", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "csv", "tsv", "ods", "odt", "odp", "wps", "wpt", "pages", "numbers", "key", "epub", "mobi", "azw3", "djvu", "html", "htm", "ini", "cfg", "conf", "log", "json", "xml", "yaml", "yml", "lua", "bat", "sh", "cmd", "ps1"])
