@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="FileIconMapping" format=3 uid="uid://bsxaoe88jy6kk"]
+
+[ext_resource type="Texture2D" uid="uid://cn5h076oegdx1" path="res://Demo Theme/Explorer/icon_compressed.svg" id="1_wtqn7"]
+[ext_resource type="Script" uid="uid://ce0gxc4g3mkdt" path="res://Controls/Explorer/FileIconMapping.gd" id="2_jylbk"]
+
+[resource]
+script = ExtResource("2_jylbk")
+Icon = ExtResource("1_wtqn7")
+Extensions = Array[String](["7z", "zip", "rar", "tar", "gz", "tgz", "bz2", "xz", ""])
