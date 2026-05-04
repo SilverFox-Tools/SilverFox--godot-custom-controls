@@ -105,7 +105,30 @@ enum ExplorerEnum_DisplayMode {
 		value = max (0 , value)
 		Explorer_DisplayPanel_Margin = value
 		Set_Node_Explorer ("DisplayPanel")
-#endregion
+
+#region 编辑器面板 显示图标 DisplayIcon
+@export_group ("显示图标", "DisplayIcon_")
+@export var DisplayIcon_Dir : Texture = null :
+	set (value) :
+		DisplayIcon_Dir = value
+		RefreshDisplay ()
+@export var DisplayIcon_EmptyDir : Texture = null :
+	set (value) :
+		DisplayIcon_EmptyDir = value
+		RefreshDisplay ()
+
+@export var DisplayIcon_FileExtension : Array[FileIconMapping] = [] :
+	set (value) :
+		DisplayIcon_FileExtension = Normalize_DisplayIcon_FileExtension (value)
+		RefreshDisplay ()
+@export var DisplayIcon_FileSecondaryExtension : Array[FileIconMapping] = [] :
+	set (value) :
+		DisplayIcon_FileSecondaryExtension = Normalize_DisplayIcon_FileExtension (value)
+		RefreshDisplay ()
+@export var DisplayIcon_Default : Texture = null :
+	set (value) :
+		DisplayIcon_Default = value
+		RefreshDisplay ()
 
 #region 编辑器面板 侧边栏 Sidebar
 @export_group ("侧边栏", "Sidebar_")
@@ -446,27 +469,26 @@ func RefreshDisplay () :
 			temp_List.select_mode = ItemList.SELECT_MULTI
 
 			for temp_item : String in directories :
-					temp_List.add_item (temp_item , load ("res://Demo Theme/Explorer/icon_directory.svg"))
+					temp_List.add_item (temp_item , DisplayIcon_Dir)
 
 			for temp_item : String in files :
 				var temp_icon = null
-				match temp_item.get_extension ().to_lower () :
-					"png" , "jpg" , "jpeg" , "gif" , "webp" , "bmp" , "pcx" , "ico" :
-						temp_icon = load ("res://Demo Theme/Explorer/icon_texture.svg")
+				var temp_Extension = temp_item.get_extension ().to_lower ().strip_edges ()
+				var temp_SecondaryExtension = temp_item.get_basename ().get_extension ().to_lower ().strip_edges ()
 
-					"txt" , "ini" , "odt" , "xlsx" , "json" :
-						temp_icon = load ("res://Demo Theme/Explorer/icon_document.svg")
+				for temp_FileIconMapping : FileIconMapping in DisplayIcon_FileExtension :
+					if temp_FileIconMapping.Extensions.has (temp_Extension) :
+						temp_icon = temp_FileIconMapping.Icon
+						break
 
-					"7z" , "zip" , "rar" :
-						temp_icon = load ("res://Demo Theme/Explorer/icon_compressed.svg")
+				if not temp_icon and temp_SecondaryExtension :
+					for temp_FileIconMapping : FileIconMapping in DisplayIcon_FileSecondaryExtension :
+						if temp_FileIconMapping.Extensions.has (temp_SecondaryExtension) :
+							temp_icon = temp_FileIconMapping.Icon
+							break
 
-					_ :
-						match temp_item.get_basename ().get_extension ().to_lower () :
-							"7z" , "zip" , "rar" :
-								temp_icon = load ("res://Demo Theme/Explorer/icon_compressed.svg")
-
-							_ :
-								temp_icon = load ("res://Demo Theme/Explorer/icon_file.svg")
+				if not temp_icon :
+					temp_icon = DisplayIcon_Default
 
 				temp_List.add_item (temp_item , temp_icon)
 
@@ -485,3 +507,12 @@ func DoubleClick_FileOrDir (Index : int) :
 	if Files_and_Dirs[Index].Type == "Dir" :
 		Node_FilePath.text += "/" + Files_and_Dirs[Index].Name
 		FilePath_InputComplete ()
+
+
+func Normalize_DisplayIcon_FileExtension (List : Array[FileIconMapping]) -> Array[FileIconMapping] :
+	List = List.duplicate ()
+	for i in List.size () :
+		if not List[i] :
+			List[i] = FileIconMapping.new()
+
+	return List

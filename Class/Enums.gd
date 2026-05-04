@@ -18,7 +18,8 @@
 class_name Enums
 extends Resource
 
-## 控件位置模式 , 已废弃 新的控件不要再继续使用
+## 控件位置模式[br]
+## @deprecated: 新的控件不要再继续此枚举[br]应该使用 [member PositionMode_Horizontal] 和 [member PositionMode_Vertical][br]
 enum PositionMode {
 	EXTERNAL_RIGHT ,	## 外部右侧，以 父级物体 右上方 为0点
 	INTERNAL_RIGHT ,	## 内部右侧，以 父级物体 右上方 减去 自己的宽度 为0点
@@ -45,6 +46,7 @@ enum PositionMode_Vertical {
 	Down_External ,		## 外部下侧
 }
 
+## @deprecated: 新的控件不要再继续此函数[br]应该使用 [method PositionMode_Application][br]或者单独对 水平 和 垂直 使用 [method PositionMode_Application_Horizontal] 和 [method PositionMode_Application_Vertical]
 static func Application_PositionMode (Position_Mode : PositionMode , Parent_Size : Vector2 , Size : Vector2 , Position : Vector2) -> Vector2 :
 	var retrun_Position : Vector2
 

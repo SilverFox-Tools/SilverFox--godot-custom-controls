@@ -40,8 +40,8 @@ var Mouse_Position : Vector2
 var old_Mouse_Position : Vector2
 
 var TitleNode_BtnNumber = 3
-var TitleNode_NodeList : Array[Control] = [Node_Btn_Minimize , Node_Btn_Maximize , Node_Btn_Close]
-var Btn_StyleTypeList : Array[String] = ["normal" , "hover" , "pressed" , "disabled" , "focus"]
+var TitleNode_NodeList	: Array[Control] = [Node_Btn_Minimize , Node_Btn_Maximize , Node_Btn_Close]
+var Btn_StyleTypeList	: Array[String] = ["normal" , "hover" , "pressed" , "disabled" , "focus"]
 
 #region 编辑器面板 标题栏 Title
 @export_group ("标题栏", "Title_")
@@ -66,56 +66,61 @@ var Btn_StyleTypeList : Array[String] = ["normal" , "hover" , "pressed" , "disab
 	set (value) :
 		Title_TextSize = value
 		Node_Text.size = value
+
 #endregion
 
 #region 编辑器面板 标题栏物体 TitleNode
 @export_group ("标题栏物体", "TitleNode_")
-@export var TitleNode_Allow : Array[bool] = [true , true , true] :
+@export var TitleNode_Allow		: Array[bool] = [true , true , true] :
 	set (value) :
 		TitleNode_Allow = value
 		Set_Node_WindowTitle ("TitleNode")
-@export var TitleNode_Position : Array[Vector2] = [Vector2 (0 , 0) , Vector2 (24 , 0) , Vector2 (48 , 0)] :
+@export var TitleNode_Position	: Array[Vector2] = [Vector2 (0 , 0) , Vector2 (24 , 0) , Vector2 (48 , 0)] :
 	set (value) :
 		TitleNode_Position = value
 		Set_Node_WindowTitle ("TitleNode")
 
-@export var TitleNode_AllowIcon : bool = true :
+@export var TitleNode_AllowIcon		: bool = true :
 	set (value) :
 		TitleNode_AllowIcon = value
-@export var TitleNode_IconPosition : Vector2 = Vector2 (4 , 4) :
+@export var TitleNode_Icon : Texture = null :
+	set (value) :
+		TitleNode_Icon = value
+		Node_Icon.texture = value
+@export var TitleNode_IconPosition	: Vector2 = Vector2 (4 , 0) :
 	set (value) :
 		TitleNode_IconPosition = value
 		Set_Node_WindowTitle ("TitleNode")
-@export var TitleNode_IconSize : Vector2 = Vector2 (24 , 24) :
+@export var TitleNode_IconSize		: Vector2 = Vector2 (24 , 24) :
 	set (value) :
 		value.x = max (value.x , 0)
 		value.y = max (value.y , 0)
 		TitleNode_IconSize = value
 		Set_Node_WindowTitle ("TitleNode")
-@export var TitleNode_Icon_PositionModeHorizontal : Enums.PositionMode_Horizontal = Enums.PositionMode_Horizontal.Left :
+@export var TitleNode_Icon_PositionModeHorizontal	: Enums.PositionMode_Horizontal = Enums.PositionMode_Horizontal.Left :
 	set (value) :
 		TitleNode_Icon_PositionModeHorizontal = value
 		Set_Node_WindowTitle ("TitleNode")
-@export var TitleNode_Icon_PositionModeVertical : Enums.PositionMode_Vertical = Enums.PositionMode_Vertical.Central :
+@export var TitleNode_Icon_PositionModeVertical		: Enums.PositionMode_Vertical = Enums.PositionMode_Vertical.Central :
 	set (value) :
 		TitleNode_Icon_PositionModeVertical = value
 		Set_Node_WindowTitle ("TitleNode")
 
-@export var TitleNode_BtnPosition : Vector2 = Vector2 (-4 , 0) :
+@export var TitleNode_BtnPosition	: Vector2 = Vector2 (-4 , 0) :
 	set (value) :
 		TitleNode_BtnPosition = value
 		Set_Node_WindowTitle ("TitleNode")
-@export var TitleNode_BtnSize : Vector2 = Vector2 (24 , 24) :
+@export var TitleNode_BtnSize		: Vector2 = Vector2 (24 , 24) :
 	set (value) :
 		value.x = max (value.x , 0)
 		value.y = max (value.y , 0)
 		TitleNode_BtnSize = value
 		Set_Node_WindowTitle ("TitleNode")
-@export var TitleNode_Btn_PositionModeHorizontal : Enums.PositionMode_Horizontal = Enums.PositionMode_Horizontal.Right :
+@export var TitleNode_Btn_PositionModeHorizontal	: Enums.PositionMode_Horizontal = Enums.PositionMode_Horizontal.Right :
 	set (value) :
 		TitleNode_Btn_PositionModeHorizontal = value
 		Set_Node_WindowTitle ("TitleNode")
-@export var TitleNode_Btn_PositionModeVertical : Enums.PositionMode_Vertical = Enums.PositionMode_Vertical.Central :
+@export var TitleNode_Btn_PositionModeVertical		: Enums.PositionMode_Vertical = Enums.PositionMode_Vertical.Central :
 	set (value) :
 		TitleNode_Btn_PositionModeVertical = value
 		Set_Node_WindowTitle ("TitleNode")
@@ -212,6 +217,9 @@ func Initialization_WindowTitle () :
 	#设置属性
 	Node_Text.name = "Text"
 	Node_Icon.name = "Icon"
+	Node_Icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	Node_Icon.texture = TitleNode_Icon
+
 	Node_Btn_Minimize.name	= "Btn Minimize"
 	Node_Btn_Maximize.name	= "Btn Maximize"
 	Node_Btn_Close.name		= "Btn Close"
@@ -267,6 +275,13 @@ func Set_Node_WindowTitle (Type : String = "All") :
 			Node_Text.size = Title_TextSize
 
 		"TitleNode" :
+			Node_Icon.size = TitleNode_IconSize
+			Node_Icon.position = Enums.PositionMode_Application (
+						TitleNode_Icon_PositionModeHorizontal ,
+						TitleNode_Icon_PositionModeVertical ,
+						self.size , Node_Icon.size , TitleNode_IconPosition
+						)
+
 			TitleNode_Allow.resize (TitleNode_BtnNumber)
 			TitleNode_Position.resize (TitleNode_BtnNumber)
 

@@ -11,7 +11,15 @@
 [ext_resource type="StyleBox" uid="uid://c3hd1br305303" path="res://style_box_empty.tres" id="6_tvxeg"]
 [ext_resource type="Script" uid="uid://cxylwneos738y" path="res://Controls/DropDown/OptionItem.gd" id="8_do1v3"]
 [ext_resource type="Script" uid="uid://1rvtkqk07gv0" path="res://Controls/Window/Window.gd" id="9_y2twt"]
+[ext_resource type="Texture2D" uid="uid://cm0vy5pq87h6m" path="res://icon.svg" id="12_d3ohx"]
 [ext_resource type="Script" uid="uid://baiiuq17blipb" path="res://Controls/Explorer/Explorer.gd" id="12_o63mf"]
+[ext_resource type="Texture2D" uid="uid://clxtfopmy8456" path="res://Demo Theme/Explorer/icon_directory.svg" id="14_dtb4h"]
+[ext_resource type="Script" uid="uid://ce0gxc4g3mkdt" path="res://Controls/Explorer/FileIconMapping.gd" id="15_7yesg"]
+[ext_resource type="Resource" uid="uid://bsxaoe88jy6kk" path="res://Demo Theme/Explorer/FileIconMapping/Extension/Compressed.tres" id="16_5j1as"]
+[ext_resource type="Texture2D" uid="uid://dd6t6ebbpa5c2" path="res://Demo Theme/Explorer/icon_file.svg" id="16_7yesg"]
+[ext_resource type="Resource" uid="uid://c6iftxt2eflot" path="res://Demo Theme/Explorer/FileIconMapping/Extension/Texture.tres" id="17_5j1as"]
+[ext_resource type="Resource" uid="uid://b45hesgf8qvml" path="res://Demo Theme/Explorer/FileIconMapping/Extension/Document.tres" id="18_5j1as"]
+[ext_resource type="Resource" uid="uid://bq37mfa3r5svd" path="res://Demo Theme/Explorer/FileIconMapping/SecondaryExtension/Compressed.tres" id="19_5j1as"]
 
 [sub_resource type="Resource" id="Resource_761q5"]
 script = ExtResource("8_do1v3")
@@ -101,6 +109,7 @@ offset_bottom = 256.0
 theme = ExtResource("1_ipwy3")
 theme_override_styles/panel = ExtResource("2_do1v3")
 script = ExtResource("9_y2twt")
+TitleNode_Icon = ExtResource("12_d3ohx")
 ThemeOverrides_Button = Dictionary[String, StyleBox]({
 "disabled": null,
 "focus": null,
@@ -119,8 +128,13 @@ offset_bottom = 688.0
 theme = ExtResource("1_ipwy3")
 theme_override_styles/panel = ExtResource("2_do1v3")
 script = ExtResource("12_o63mf")
+DisplayIcon_Dir = ExtResource("14_dtb4h")
+DisplayIcon_FileExtension = Array[ExtResource("15_7yesg")]([ExtResource("16_5j1as"), ExtResource("18_5j1as"), ExtResource("17_5j1as")])
+DisplayIcon_FileSecondaryExtension = Array[ExtResource("15_7yesg")]([ExtResource("19_5j1as")])
+DisplayIcon_Default = ExtResource("16_7yesg")
 Sidebar_BookmarkHeight = 64.0
 Sidebar_QuickAccessHeight = 64.0
 Sidebar_VolumeHeight = 64.0
 Sidebar_RecentFoldersHeight = 64.0
+TitleNode_Icon = ExtResource("12_d3ohx")
 metadata/_custom_type_script = "uid://1rvtkqk07gv0"

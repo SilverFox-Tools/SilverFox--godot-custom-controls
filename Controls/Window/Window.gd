@@ -105,6 +105,10 @@ enum TitleEnum_Position {
 	set (value) :
 		TitleNode_AllowIcon = value
 		Node_WindowTitle.TitleNode_AllowIcon = value
+@export var TitleNode_Icon : Texture = null :
+	set (value) :
+		TitleNode_Icon = value
+		Node_WindowTitle.TitleNode_Icon = value
 @export var TitleNode_IconPosition : Vector2 = Vector2 (4 , 0) :
 	set (value) :
 		TitleNode_IconPosition = value
@@ -121,6 +125,7 @@ enum TitleEnum_Position {
 	set (value) :
 		TitleNode_Icon_PositionModeVertical = value
 		Node_WindowTitle.TitleNode_Icon_PositionModeVertical = value
+
 
 @export var TitleNode_BtnPosition : Vector2 = Vector2 (-4 , 0) :
 	set (value) :
@@ -247,6 +252,10 @@ func Initialization_CustomWindow () :
 #endregion
 
 
+func _ready () -> void :
+	RefreshVariable_CustomWindow_to_WindowTitle ()
+
+
 func Set_Node_CustomWindow (Type : String = "All") :
 	match Type :
 		#重绘
@@ -313,10 +322,12 @@ func RefreshVariable_CustomWindow_to_WindowTitle () :
 	Node_WindowTitle.TitleNode_Position						= TitleNode_Position
 
 	Node_WindowTitle.TitleNode_AllowIcon					= TitleNode_AllowIcon
+	Node_WindowTitle.TitleNode_Icon							= TitleNode_Icon
 	Node_WindowTitle.TitleNode_IconPosition					= TitleNode_IconPosition
 	Node_WindowTitle.TitleNode_IconSize						= TitleNode_IconSize
 	Node_WindowTitle.TitleNode_Icon_PositionModeHorizontal	= TitleNode_Icon_PositionModeHorizontal
 	Node_WindowTitle.TitleNode_Icon_PositionModeVertical	= TitleNode_Icon_PositionModeVertical
+
 	Node_WindowTitle.TitleNode_BtnPosition					= TitleNode_BtnPosition
 	Node_WindowTitle.TitleNode_BtnSize						= TitleNode_BtnSize
 	Node_WindowTitle.TitleNode_Btn_PositionModeHorizontal	= TitleNode_Btn_PositionModeHorizontal
