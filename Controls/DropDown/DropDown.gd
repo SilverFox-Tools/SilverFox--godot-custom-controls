@@ -135,7 +135,7 @@ func DropDownItem_resetPosition () :
 	DropDownItem_Position = Vector2 (0 , DropDown_Size.y)
 
 
-@export var DropDownItem_Items : Array[OptionItem] = [] :
+@export var DropDownItem_Items : Array[DropDownOption] = [] :
 	set (Items) :
 		DropDownItem_Items = Items
 		Update_Items ()
@@ -298,8 +298,8 @@ func Update_Items (Type : String = "Redraw") :
 	match Type :
 		"Redraw" :
 			for i in DropDownItem_Items.size () :
-				if DropDownItem_Items[i] is not OptionItem :
-					DropDownItem_Items[i] = OptionItem.new ()
+				if DropDownItem_Items[i] is not DropDownOption :
+					DropDownItem_Items[i] = DropDownOption.new ()
 					DropDownItem_Items[i].set_parent (self)
 
 			while NodeList_Items.size () > DropDownItem_Items.size () :
@@ -329,7 +329,7 @@ func Update_Items (Type : String = "Redraw") :
 			var Position_NodeItem = 0
 			for i in DropDownItem_Items.size () :
 				var node : Button = NodeList_Items[i]
-				var Item : OptionItem = DropDownItem_Items[i]
+				var Item : DropDownOption = DropDownItem_Items[i]
 				node.size = Vector2 (DropDownItem_Width , DropDownItem_Height)
 				node.position = Vector2 (0 , Position_NodeItem)
 
@@ -492,7 +492,7 @@ func Update_SelfDisplay () :
 
 #region 设置Item
 func Add_Item (value) :
-	DropDownItem_Items += [OptionItem.new ()]
+	DropDownItem_Items += [DropDownOption.new ()]
 	Set_Item (value , DropDownItem_Items.size () - 1)
 
 func Add_Items (Array_value : Array) :
@@ -528,7 +528,7 @@ func Set_Item (value , ID : int = 0) :
 		DropDownItem_Items[ID].Icon = value
 	elif value is bool :
 		DropDownItem_Items[ID].Disabled = value
-	elif value is OptionItem :
+	elif value is DropDownOption :
 		DropDownItem_Items[ID] = value
 
 	elif value is Array :

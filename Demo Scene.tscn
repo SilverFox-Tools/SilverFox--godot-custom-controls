@@ -9,7 +9,7 @@
 [ext_resource type="StyleBox" uid="uid://bkik5x7ncrw7x" path="res://Demo Theme/DropDown/disabled.tres" id="3_k60n3"]
 [ext_resource type="StyleBox" uid="uid://bsi3lxir43yvq" path="res://Demo Theme/DropDown/hover.tres" id="4_tvxeg"]
 [ext_resource type="StyleBox" uid="uid://c3hd1br305303" path="res://style_box_empty.tres" id="6_tvxeg"]
-[ext_resource type="Script" uid="uid://cxylwneos738y" path="res://Controls/DropDown/OptionItem.gd" id="8_do1v3"]
+[ext_resource type="Script" uid="uid://cxylwneos738y" path="res://Controls/DropDown/DropDownOption.gd" id="8_do1v3"]
 [ext_resource type="Script" uid="uid://1rvtkqk07gv0" path="res://Controls/Window/Window.gd" id="9_y2twt"]
 [ext_resource type="Texture2D" uid="uid://cm0vy5pq87h6m" path="res://icon.svg" id="12_d3ohx"]
 [ext_resource type="Script" uid="uid://baiiuq17blipb" path="res://Controls/Explorer/Explorer.gd" id="12_o63mf"]
@@ -20,6 +20,7 @@
 [ext_resource type="Resource" uid="uid://c6iftxt2eflot" path="res://Demo Theme/Explorer/FileIconMapping/Extension/Texture.tres" id="17_5j1as"]
 [ext_resource type="Resource" uid="uid://b45hesgf8qvml" path="res://Demo Theme/Explorer/FileIconMapping/Extension/Document.tres" id="18_5j1as"]
 [ext_resource type="Resource" uid="uid://bq37mfa3r5svd" path="res://Demo Theme/Explorer/FileIconMapping/SecondaryExtension/Compressed.tres" id="19_5j1as"]
+[ext_resource type="Script" uid="uid://cmp7jbqrrrbyj" path="res://Controls/PopupMenuButton/PopupMenuButton.gd" id="21_uk0xf"]
 
 [sub_resource type="Resource" id="Resource_761q5"]
 script = ExtResource("8_do1v3")
@@ -138,3 +139,15 @@ Sidebar_VolumeHeight = 64.0
 Sidebar_RecentFoldersHeight = 64.0
 TitleNode_Icon = ExtResource("12_d3ohx")
 metadata/_custom_type_script = "uid://1rvtkqk07gv0"
+
+[node name="PopupMenuButton" type="Button" parent="." unique_id=699885351]
+layout_mode = 0
+offset_left = 504.0
+offset_top = 32.0
+offset_right = 632.0
+offset_bottom = 64.0
+text = "PopupMenu"
+text_overrun_behavior = 1
+script = ExtResource("21_uk0xf")
+PopupMenuItem_Item = null
+metadata/_custom_type_script = "uid://cmp7jbqrrrbyj"

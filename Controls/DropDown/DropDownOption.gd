@@ -1,5 +1,5 @@
 # ============================================
-# OptionItem 选项资源
+# DropDownOption 选项资源
 # 作者:
 # ——>	东方银狐 / DFYH / DF.SilverFox
 # ———	——>	https://github.com/bilibiliDFYH
@@ -14,7 +14,7 @@
 # V1.0
 # ============================================
 
-class_name OptionItem
+class_name DropDownOption
 extends Resource
 
 var _parent : DropDown = null
