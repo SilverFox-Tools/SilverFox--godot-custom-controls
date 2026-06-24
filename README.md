@@ -1,6 +1,7 @@
-# SilverFox Godot Custom Controls
+# SilverFox Godot Custom Controls (NoDemo)
 
 这是一个为Godot引擎开发的自定义控件库，提供了一系列增强的UI控件，帮助开发者快速构建美观且功能丰富的用户界面。
+无演示场景和演示用的style
 
 ## 功能特性
 
